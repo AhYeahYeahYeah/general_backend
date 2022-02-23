@@ -20,6 +20,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    
     - name: Set up JDK 17
       uses: actions/setup-java@v2
       with:
@@ -29,7 +30,33 @@ jobs:
     - name: Make gradlew executable
       run: chmod +x ./gradlew
       
+    - uses: actions/cache@v2
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+      
     - name: Build with Gradle
       uses: gradle/gradle-build-action@v2
       with:
         arguments: build
+        
+    # 部署到阿里云
+    - name: Deploy to Aliyun
+      uses: easingthemes/ssh-deploy@main
+      env:
+        # 私钥
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        # scp参数
+        ARGS: "-avzr --delete"
+        # 源目录，编译后生成的文件目录
+        SOURCE: "./"
+        # 服务器ip：换成你的服务器IP
+        REMOTE_HOST: "8.141.159.53"
+        # 用户
+        REMOTE_USER: "bank"
+        # 目标地址 你在服务器上部署代码的地方
+        TARGET: "/home/bank/buildspace/general_backend/"
