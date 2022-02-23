@@ -1,0 +1,13 @@
+server:
+  port: 10450
+
+spring:
+  datasource:
+    url: jdbc:mysql://8.141.159.53:3306/bank?useUnicode=true&characterEncoding=UTF-8
+    username: bank
+    password: BaNk1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+# mybatis:
+  # mapper-locations: classpath:mapping/*.xml
+  # type-aliases-package: team.workflow.general_backend.pojo
