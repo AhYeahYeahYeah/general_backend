@@ -1,58 +1,67 @@
 package com.workflow.general_backend.entity;
 
+
 public class Customer {
-    private String cid;
-    private String account;
-    private String password;
-    private String cname;
-    private String nickName;
-    private String avatar;
 
-    public String getCid() {
-        return cid;
-    }
+  private String cid;
+  private String account;
+  private String password;
+  private String cname;
+  private String nickName;
+  private String avatar;
 
-    public void setCid(String cid) {
-        this.cid = cid;
-    }
 
-    public String getAccount() {
-        return account;
-    }
+  public String getCid() {
+    return cid;
+  }
 
-    public void setAccount(String account) {
-        this.account = account;
-    }
+  public void setCid(String cid) {
+    this.cid = cid;
+  }
 
-    public String getPassword() {
-        return password;
-    }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+  public String getAccount() {
+    return account;
+  }
 
-    public String getCname() {
-        return cname;
-    }
+  public void setAccount(String account) {
+    this.account = account;
+  }
 
-    public void setCname(String cname) {
-        this.cname = cname;
-    }
 
-    public String getNickName() {
-        return nickName;
-    }
+  public String getPassword() {
+    return password;
+  }
 
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
-    }
+  public void setPassword(String password) {
+    this.password = password;
+  }
 
-    public String getAvatar() {
-        return avatar;
-    }
 
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
+  public String getCname() {
+    return cname;
+  }
+
+  public void setCname(String cname) {
+    this.cname = cname;
+  }
+
+
+  public String getNickName() {
+    return nickName;
+  }
+
+  public void setNickName(String nickName) {
+    this.nickName = nickName;
+  }
+
+
+  public String getAvatar() {
+    return avatar;
+  }
+
+  public void setAvatar(String avatar) {
+    this.avatar = avatar;
+  }
+
 }
