@@ -19,8 +19,8 @@ public class LoginConfig implements WebMvcConfigurer {
                 "/c1",
                 "/v1/auth/clogin",       //用户登录
                 "/v1/auth/alogin",       //管理员登录
-                                         //用户注册
-                                         //管理员注册
+                "/v1/auth/cregister",    //用户注册
+                "/v1/auth/aregister",    //管理员注册
                 "/**/*.html",            //html静态资源
                 "/**/*.js",              //js静态资源
                 "/**/*.css",             //css静态资源
