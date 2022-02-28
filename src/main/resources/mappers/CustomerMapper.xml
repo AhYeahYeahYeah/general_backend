@@ -2,6 +2,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.workflow.general_backend.mapper.CustomerMapper">
+    <insert id="addAdmin" parameterType="com.workflow.general_backend.entity.Customer">
+        insert into admin
+            (cid,account,password,cname,nick_name,avatar)
+        values (#{cid},#{account},#{password},#{cname},#{nickName},#{avatar})
+    </insert>
+
+    <select id="findCustomerByAccount" parameterType="string" resultType="com.workflow.general_backend.entity.Customer">
+        SELECT account,password from customer where account=#{account}
+    </select>
 
 
 </mapper>
