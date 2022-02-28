@@ -27,7 +27,7 @@ public class JwtInterceptor implements HandlerInterceptor {
             // 取出playload
             Claims claims=claimsJws.getBody();
             // 取出playload中的数据(如果是自己自定义的键值可以通过get()方法取出，假设储存的值可以转换String;如果是playload中的标准字段可以直接通过函数取出)
-            // 取出用户名即account
+            // 取出用户账号即account
             String account=(String)claims.get("account");
             // 将redis中根据account取出的token转化为String类型
             String JWTR= (String) redisTemplate.opsForValue().get(account);
