@@ -1,6 +1,6 @@
 package com.workflow.general_backend.dto;
 
-public class Result {
+public class CommonResult {
     String status;
     String msg;
 
