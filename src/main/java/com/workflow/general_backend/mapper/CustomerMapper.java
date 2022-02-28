@@ -5,6 +5,6 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface CustomerMapper {
-    public Customer findCustomerByAccount(String account);
-    public int addAdmin(Customer customer);
+    Customer findCustomerByAccount(String account);
+    int addCustomer(Customer customer);
 }
