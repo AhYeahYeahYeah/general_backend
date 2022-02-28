@@ -21,6 +21,6 @@ spring:
     timeout: 5000ms
 
 mybatis:
-  mapper-locations: classpath:mapping/*.xml
+  mapper-locations: classpath:mappers/*.xml
   # type-aliases-package: team.workflow.general_backend.pojo
 
