@@ -1,7 +1,7 @@
 package com.workflow.general_backend.entity;
 
 
-public class Order {
+public class Orders {
 
   private String oid;
   private String pid;
