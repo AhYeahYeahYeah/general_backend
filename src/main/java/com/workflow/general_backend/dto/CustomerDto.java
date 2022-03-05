@@ -15,7 +15,6 @@ public class CustomerDto {
         this.token = token;
     }
 
-
     public Customer getCustomer() {
         return customer;
     }

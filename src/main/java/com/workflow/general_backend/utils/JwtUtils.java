@@ -18,11 +18,12 @@ public class JwtUtils {
     /**
      * 根据用户id和昵称生成token
      * //@param id  用户id
+     *
      * @param account 用户名
      * @return JWT规则生成的token
      */
 //    public static String getJwtToken(String id, String name){
-    public static String getJwtToken(String account){
+    public static String getJwtToken(String account) {
         String JwtToken = Jwts.builder()
 //                .setSubject("User")
                 .setIssuedAt(new Date())
@@ -37,6 +38,7 @@ public class JwtUtils {
 
     /**
      * 判断token是否存在与有效
+     *
      * @param jwtToken token字符串
      * @return 如果token有效返回true，否则返回false
      */

@@ -15,32 +15,31 @@ import javax.annotation.Resource;
 @RestController
 @RequestMapping("/v1/auth")
 public class LRController {
-    //    /v1/auth/cregister
-//    @RequestMapping("/v1/auth/alogin")
-//    public void alogin(){
-//        System.out.println("hhhh");
-//    }
+
     @Resource
     CustomerService customerService;
     @Resource
     AdminService adminService;
+
     @PostMapping("/clogin")
-    public CustomerDto clogin(@RequestBody Customer customer){
+    public CustomerDto clogin(@RequestBody Customer customer) {
         return customerService.clogin(customer);
     }
+
     @PostMapping("/alogin")
-    public AdminDto alogin(@RequestBody Admin admin){
+    public AdminDto alogin(@RequestBody Admin admin) {
         return adminService.alogin(admin);
     }
+
     @PostMapping("/cregister")
-    public CommonResult cregister(@RequestBody Customer customer){
+    public CommonResult cregister(@RequestBody Customer customer) {
         return customerService.cregister(customer);
     }
+
     @PostMapping("/aregister")
-    public CommonResult aregister(@RequestBody Admin admin){
+    public CommonResult aregister(@RequestBody Admin admin) {
         return adminService.aregister(admin);
     }
-
 
 
 }
