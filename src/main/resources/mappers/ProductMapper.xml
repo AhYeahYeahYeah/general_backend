@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.workflow.general_backend.mapper.ProductMapper">
+
+
+    <resultMap id="ProductResultMap" type="com.workflow.general_backend.entity.Product">
+        <!-- 定义主键 ,非常重要。如果是多个字段,则定义多个id -->
+        <!-- property：主键在pojo中的属性名 -->
+        <!-- column：主键在数据库中的列名 -->
+        <id property="pid" column="pid"/>
+        <!-- 定义普通属性 -->
+        <result property="productNum" column="product_num"/>
+        <result property="validityPeriod" column="validity_period"/>
+        <result property="productName" column="product_name"/>
+        <result property="annualRate" column="annual_rate"/>
+        <result property="minAmount" column="min_amount"/>
+        <result property="increAmount" column="incre_amount"/>
+        <result property="singlePersonLimit" column="single_person_limit"/>
+        <result property="singleDayLimit" column="single_day_limit"/>
+        <result property="riskLevel" column="risk_level"/>
+        <result property="settlementMethod" column="settlement_method"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.workflow.general_backend.entity.Product">
+        INSERT INTO product(pid, product_num, validity_period, storage, product_name, annual_rate, min_amount,
+                            incre_amount, single_person_limit, single_day_limit, risk_level, settlement_method, fid)
+        VALUES (#{pid}, #{productNum}, #{validityPeriod}, #{storage}, #{productName}, #{annualRate}, #{minAmount},
+                #{increAmount}, #{singlePersonLimit}, #{singleDayLimit}, #{riskLevel}, #{settlementMethod}, #{fid})
+    </insert>
+    <update id="update" parameterType="com.workflow.general_backend.entity.Product">
+        update product
+        set product_num=#{productNum},
+            validity_period=#{validityPeriod},
+            storage=#{storage},
+            product_name=#{productName},
+            annual_rate=#{annualRate},
+            min_amount=#{minAmount},
+            incre_amount=#{increAmount},
+            single_person_limit=#{singlePersonLimit},
+            single_day_limit=#{singleDayLimit},
+            risk_level=#{riskLevel},
+            settlement_method=#{settlementMethod},
+            fid=#{fid}
+        where pid = #{pid}
+    </update>
+    <delete id="deleteById" parameterType="string">
+        DELETE
+        FROM product
+        WHERE pid = #{pid}
+    </delete>
+    <select id="findAll" resultMap="ProductResultMap">
+        SELECT *
+        from product
+    </select>
+    <select id="findById" parameterType="string" resultMap="ProductResultMap">
+        SELECT *
+        from product
+        where pid = #{pid}
+    </select>
+
+
+</mapper>
