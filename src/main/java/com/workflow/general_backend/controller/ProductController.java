@@ -15,27 +15,27 @@ public class ProductController {
     @Resource
     ProductService productService;
 
-    @GetMapping("/get/")
+    @GetMapping
     public List<Product> findAll() {
         return productService.findAll();
     }
 
-    @GetMapping("/get/{pid}")
+    @GetMapping("/{pid}")
     public List<Product> findById(@PathVariable("pid") String pid) {
         return productService.findById(pid);
     }
 
-    @PostMapping("/post")
+    @PostMapping
     public CommonResult insert(Product product) {
         return productService.insert(product);
     }
 
-    @DeleteMapping("/delete/{pid}")
+    @DeleteMapping("/{pid}")
     public CommonResult deleteById(@PathVariable("pid") String pid) {
         return productService.deleteById(pid);
     }
 
-    @PutMapping("/put")
+    @PutMapping
     public CommonResult update(Product product) {
         return productService.update(product);
     }
