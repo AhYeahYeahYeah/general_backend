@@ -6,6 +6,7 @@ import com.workflow.general_backend.entity.Customer;
 import com.workflow.general_backend.mapper.CustomerMapper;
 import com.workflow.general_backend.service.CustomerService;
 import com.workflow.general_backend.utils.JwtUtils;
+import com.workflow.general_backend.utils.RedisUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,7 @@ import java.util.UUID;
 @Service
 public class CustomerServiceImpl implements CustomerService {
     @Autowired
-    RedisTemplate redisTemplate;
+    RedisUtils redisUtils;
     @Resource
     CustomerMapper customerMapper;
 
@@ -37,7 +38,7 @@ public class CustomerServiceImpl implements CustomerService {
         // 获取传进来的账号account，生成token，将{account:token}存入redis
         String account = customer.getAccount();
         token = JwtUtils.getJwtToken(account);
-        redisTemplate.opsForValue().set(account, token);
+        redisUtils.set(account, token);
         // 返回给用户,将返回密码设置成空串
         customer_back.setPassword("");
         customerDto.setCustomer(customer_back);

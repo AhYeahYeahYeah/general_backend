@@ -9,6 +9,7 @@ import com.workflow.general_backend.mapper.AdminMapper;
 import com.workflow.general_backend.mapper.CustomerMapper;
 import com.workflow.general_backend.service.AdminService;
 import com.workflow.general_backend.utils.JwtUtils;
+import com.workflow.general_backend.utils.RedisUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,7 @@ import java.util.UUID;
 @Service
 public class AdminServiceImpl implements AdminService {
     @Autowired
-    RedisTemplate redisTemplate;
+    RedisUtils redisUtils;
     @Resource
     AdminMapper adminMapper;
 
@@ -41,7 +42,8 @@ public class AdminServiceImpl implements AdminService {
         // 获取传进来的账号account，生成token，将{account:token}存入redis
         String account = admin.getAccount();
         token = JwtUtils.getJwtToken(account);
-        redisTemplate.opsForValue().set(account, token);
+        System.out.println(token);
+        redisUtils.set(account, token);
         // 返回给用户,将返回密码设置成空串
         admin_back.setPassword("");
         adminDto.setAdmin(admin_back);
