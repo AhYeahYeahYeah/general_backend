@@ -8,10 +8,12 @@ import com.workflow.general_backend.service.CustomerService;
 import com.workflow.general_backend.utils.JwtUtils;
 import com.workflow.general_backend.utils.RedisUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -61,7 +63,7 @@ public class CustomerServiceImpl implements CustomerService {
         // 生成uuid，进行注册
         String uuid = UUID.randomUUID().toString();
         customer.setCid(uuid);
-        int res = customerMapper.addCustomer(customer);
+        int res = customerMapper.insert(customer);
         // 判断后台操作成功条数，为1即正常，为0则失败。
         if (res == 0) {
             commonResult.setStatus("Failed");
@@ -73,5 +75,65 @@ public class CustomerServiceImpl implements CustomerService {
             return commonResult;
         }
 
+    }
+
+    @Override
+    public List<Customer> findAll() {
+        return customerMapper.findAll();
+    }
+
+    @Override
+    public List<Customer> findById(String cid) {
+        return customerMapper.findById(cid);
+    }
+
+    @Override
+    public CommonResult insert(Customer customer) {
+        CommonResult commonResult = new CommonResult();
+        String uuid = UUID.randomUUID().toString();
+        customer.setCid(uuid);
+        try {
+            int res = customerMapper.insert(customer);
+            if (res == 1) {
+                commonResult.setStatus("OK");
+            } else {
+                commonResult.setStatus("Failed");
+            }
+            return commonResult;
+        } catch (DataAccessException e) {
+            commonResult.setStatus("Failed");
+            commonResult.setMsg(e.toString());
+            return commonResult;
+        }
+    }
+
+    @Override
+    public CommonResult deleteById(String cid) {
+        CommonResult commonResult = new CommonResult();
+        int res = customerMapper.deleteById(cid);
+        if (res == 1) {
+            commonResult.setStatus("OK");
+        } else {
+            commonResult.setStatus("Failed");
+        }
+        return commonResult;
+    }
+
+    @Override
+    public CommonResult update(Customer customer) {
+        CommonResult commonResult = new CommonResult();
+        try {
+            int res = customerMapper.update(customer);
+            if (res == 1) {
+                commonResult.setStatus("OK");
+            } else {
+                commonResult.setStatus("Failed");
+            }
+            return commonResult;
+        }catch (DataAccessException e){
+            commonResult.setStatus("Failed");
+            commonResult.setMsg(e.toString());
+            return commonResult;
+        }
     }
 }

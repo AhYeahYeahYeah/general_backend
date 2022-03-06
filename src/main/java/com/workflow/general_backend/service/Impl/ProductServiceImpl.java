@@ -4,6 +4,7 @@ import com.workflow.general_backend.dto.CommonResult;
 import com.workflow.general_backend.entity.Product;
 import com.workflow.general_backend.mapper.ProductMapper;
 import com.workflow.general_backend.service.ProductService;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -26,17 +27,23 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public CommonResult insert(Product product) {
+    public CommonResult insert(Product product){
         CommonResult commonResult = new CommonResult();
         String uuid = UUID.randomUUID().toString();
         product.setPid(uuid);
-        int res = productMapper.insert(product);
-        if (res == 1) {
-            commonResult.setStatus("OK");
-        } else {
+        try {
+            int res = productMapper.insert(product);
+            if (res == 1) {
+                commonResult.setStatus("OK");
+            } else {
+                commonResult.setStatus("Failed");
+            }
+            return commonResult;
+        }catch (DataAccessException e){
             commonResult.setStatus("Failed");
+            commonResult.setMsg(e.toString());
+            return commonResult;
         }
-        return commonResult;
     }
 
     @Override
@@ -54,12 +61,19 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public CommonResult update(Product product) {
         CommonResult commonResult = new CommonResult();
-        int res = productMapper.update(product);
-        if (res == 1) {
-            commonResult.setStatus("OK");
-        } else {
+        try {
+            int res = productMapper.update(product);
+            if (res == 1) {
+                commonResult.setStatus("OK");
+            } else {
+                commonResult.setStatus("Failed");
+            }
+            return commonResult;
+        }catch (DataAccessException e){
             commonResult.setStatus("Failed");
+            commonResult.setMsg(e.toString());
+            return commonResult;
         }
-        return commonResult;
+
     }
 }

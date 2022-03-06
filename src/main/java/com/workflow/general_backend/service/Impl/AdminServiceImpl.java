@@ -12,6 +12,7 @@ import com.workflow.general_backend.service.AdminService;
 import com.workflow.general_backend.utils.JwtUtils;
 import com.workflow.general_backend.utils.RedisUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -94,27 +95,41 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public CommonResult insert(Admin admin) {
-        CommonResult commonResult=new CommonResult();
+        CommonResult commonResult = new CommonResult();
         String uuid = UUID.randomUUID().toString();
         admin.setAid(uuid);
-        int res=adminMapper.insert(admin);
-        if(res==1){
-            commonResult.setStatus("OK");
-        }else {
+        try {
+            int res = adminMapper.insert(admin);
+            if (res == 1) {
+                commonResult.setStatus("OK");
+            } else {
+                commonResult.setStatus("Failed");
+            }
+            return commonResult;
+        } catch (DataAccessException e) {
             commonResult.setStatus("Failed");
+            commonResult.setMsg(e.toString());
+            return commonResult;
         }
-        return commonResult;
+
     }
 
     @Override
     public CommonResult update(Admin admin) {
-        CommonResult commonResult=new CommonResult();
-        int res=adminMapper.update(admin);
-        if(res==1){
-            commonResult.setStatus("OK");
-        }else {
+        CommonResult commonResult = new CommonResult();
+        try {
+            int res = adminMapper.update(admin);
+            if (res == 1) {
+                commonResult.setStatus("OK");
+            } else {
+                commonResult.setStatus("Failed");
+            }
+            return commonResult;
+        } catch (DataAccessException e) {
             commonResult.setStatus("Failed");
+            commonResult.setMsg(e.toString());
+            return commonResult;
         }
-        return commonResult;
+
     }
 }
