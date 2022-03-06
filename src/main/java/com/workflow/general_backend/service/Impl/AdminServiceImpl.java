@@ -5,6 +5,7 @@ import com.workflow.general_backend.dto.CommonResult;
 import com.workflow.general_backend.dto.CustomerDto;
 import com.workflow.general_backend.entity.Admin;
 import com.workflow.general_backend.entity.Customer;
+import com.workflow.general_backend.entity.Product;
 import com.workflow.general_backend.mapper.AdminMapper;
 import com.workflow.general_backend.mapper.CustomerMapper;
 import com.workflow.general_backend.service.AdminService;
@@ -15,6 +16,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -67,7 +69,7 @@ public class AdminServiceImpl implements AdminService {
         // 生成uuid，进行注册
         String uuid = UUID.randomUUID().toString();
         admin.setAid(uuid);
-        int res = adminMapper.addAdmin(admin);
+        int res = adminMapper.insert(admin);
         // 判断后台操作成功条数，为1即正常，为0则失败。
         if (res == 0) {
             commonResult.setStatus("Failed");
@@ -78,5 +80,41 @@ public class AdminServiceImpl implements AdminService {
             commonResult.setMsg("");
             return commonResult;
         }
+    }
+
+    @Override
+    public List<Admin> findAll() {
+        return adminMapper.findAll();
+    }
+
+    @Override
+    public List<Admin> findById(String aid) {
+        return adminMapper.findById(aid);
+    }
+
+    @Override
+    public CommonResult insert(Admin admin) {
+        CommonResult commonResult=new CommonResult();
+        String uuid = UUID.randomUUID().toString();
+        admin.setAid(uuid);
+        int res=adminMapper.insert(admin);
+        if(res==1){
+            commonResult.setStatus("OK");
+        }else {
+            commonResult.setStatus("Failed");
+        }
+        return commonResult;
+    }
+
+    @Override
+    public CommonResult update(Admin admin) {
+        CommonResult commonResult=new CommonResult();
+        int res=adminMapper.update(admin);
+        if(res==1){
+            commonResult.setStatus("OK");
+        }else {
+            commonResult.setStatus("Failed");
+        }
+        return commonResult;
     }
 }

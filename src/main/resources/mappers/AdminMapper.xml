@@ -2,16 +2,35 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.workflow.general_backend.mapper.AdminMapper">
-    <insert id="addAdmin" parameterType="com.workflow.general_backend.entity.Admin">
+    <insert id="insert" parameterType="com.workflow.general_backend.entity.Admin">
         insert into admin
-            (aid, account, password, aname, nick_name, avatar)
-        values (#{aid}, #{account}, #{password}, #{aname}, #{nickName}, #{avatar})
+            (aid, account, password, aname, nick_name, avatar,permissions)
+        values (#{aid}, #{account}, #{password}, #{aname}, #{nickName}, #{avatar},#{permissions})
     </insert>
+    <update id="update" parameterType="com.workflow.general_backend.entity.Admin">
+        update admin
+        set account=#{account},
+            password=#{password},
+            aname=#{aname},
+            nick_name=#{nickName},
+            avatar=#{avatar},
+            permissions=#{permissions}
+        where aid = #{aid}
+    </update>
 
     <select id="findAdminByAccount" parameterType="string" resultMap="AdminResultMap">
         SELECT *
         from admin
         where account = #{account}
+    </select>
+    <select id="findAll" resultMap="AdminResultMap">
+        SELECT *
+        from admin
+    </select>
+    <select id="findById" parameterType="string" resultMap="AdminResultMap">
+        SELECT *
+        from admin
+        where aid = #{aid}
     </select>
     <resultMap id="AdminResultMap" type="com.workflow.general_backend.entity.Admin">
         <!-- 定义主键 ,非常重要。如果是多个字段,则定义多个id -->

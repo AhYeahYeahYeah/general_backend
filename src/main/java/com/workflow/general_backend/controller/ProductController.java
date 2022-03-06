@@ -26,7 +26,7 @@ public class ProductController {
     }
 
     @PostMapping
-    public CommonResult insert(Product product) {
+    public CommonResult insert(@RequestBody Product product) {
         return productService.insert(product);
     }
 
@@ -36,7 +36,7 @@ public class ProductController {
     }
 
     @PutMapping
-    public CommonResult update(Product product) {
+    public CommonResult update(@RequestBody Product product) {
         return productService.update(product);
     }
 

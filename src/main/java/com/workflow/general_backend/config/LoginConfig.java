@@ -19,7 +19,6 @@ public class LoginConfig implements WebMvcConfigurer {
         InterceptorRegistration registration = registry.addInterceptor(jwtInterceptor);
 //        registration.addPathPatterns("/**");                      //所有路径都被拦截
         registration.excludePathPatterns(                         //添加不拦截路径
-                "/**",
                 "/c1",
                 "/v1/auth/clogin",       //用户登录
                 "/v1/auth/alogin",       //管理员登录
