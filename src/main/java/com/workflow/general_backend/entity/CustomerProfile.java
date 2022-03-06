@@ -8,7 +8,7 @@ public class CustomerProfile {
     private String birthday;
     private String phoneNum;
     private String address;
-    private String group;
+    private String grouplist;
     private String cardNum;
 
 
@@ -57,14 +57,13 @@ public class CustomerProfile {
     }
 
 
-    public String getGroup() {
-        return group;
+    public String getGrouplist() {
+        return grouplist;
     }
 
-    public void setGroup(String group) {
-        this.group = group;
+    public void setGrouplist(String grouplist) {
+        this.grouplist = grouplist;
     }
-
 
     public String getCardNum() {
         return cardNum;
