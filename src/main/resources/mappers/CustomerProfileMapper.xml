@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.workflow.general_backend.mapper.CustomerProfileMapper">
+    <resultMap id="CustomerProfileResultMap" type="com.workflow.general_backend.entity.CustomerProfile">
+        <id property="cid" column="cid"/>
+        <result property="phoneNum" column="phone_num"/>
+        <result property="cardNum" column="card_num"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.workflow.general_backend.entity.CustomerProfile">
+        insert into customer_profile
+            (cid, sid, birthday, phone_num, address, grouplist, card_num)
+        values (#{cid}, #{sid}, #{birthday}, #{phoneNum}, #{address}, #{grouplist}, #{cardNum})
+    </insert>
+    <update id="update" parameterType="com.workflow.general_backend.entity.CustomerProfile">
+        update customer_profile
+        set sid=#{sid},
+            birthday=#{birthday},
+            phone_num=#{phoneNum},
+            address=#{address},
+            grouplist=#{grouplist},
+            card_num=#{cardNum}
+        where cid = #{cid}
+    </update>
+    <delete id="deleteById" parameterType="string">
+        delete
+        from customer_profile
+        where cid = #{cid}
+    </delete>
+    <select id="findAll" resultMap="CustomerProfileResultMap">
+        select *
+        from customer_profile
+    </select>
+    <select id="findById" parameterType="string" resultMap="CustomerProfileResultMap">
+        select *
+        from customer_profile
+        where cid = #{cid}
+    </select>
+
+
+</mapper>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.workflow.general_backend.mapper.WhiteListMapper">
+    <insert id="insert" parameterType="com.workflow.general_backend.entity.Whitelist">
+        insert into whitelist
+            (wid, name, users, description)
+        values (#{wid}, #{name}, #{users}, #{description})
+    </insert>
+    <update id="update" parameterType="com.workflow.general_backend.entity.Whitelist">
+        update whitelist
+        set name=#{name},
+            users=#{users},
+            description=#{description}
+        where wid = #{wid}
+    </update>
+    <delete id="deleteById" parameterType="string">
+        delete from whitelist where wid=#{wid}
+    </delete>
+
+    <select id="findAll" resultType="com.workflow.general_backend.entity.Whitelist">
+        select * from whitelist
+    </select>
+    <select id="findById" parameterType="string" resultType="com.workflow.general_backend.entity.Whitelist">
+        select * from whitelist where wid=#{wid}
+    </select>
+</mapper>
