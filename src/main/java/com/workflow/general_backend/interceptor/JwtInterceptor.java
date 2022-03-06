@@ -34,6 +34,8 @@ public class JwtInterceptor implements HandlerInterceptor {
         String JWT = request.getHeader("Authorization");
         String url = request.getRequestURI();
         String method = request.getMethod();
+        if(method.equals("OPTIONS"))
+            return true;
         String required = "";
         System.out.println(method);
 
