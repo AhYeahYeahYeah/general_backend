@@ -1,9 +1,9 @@
 package com.workflow.general_backend.service.Impl;
 
 import com.workflow.general_backend.dto.CommonResult;
-import com.workflow.general_backend.entity.Blacklist;
-import com.workflow.general_backend.mapper.BlacklistMapper;
-import com.workflow.general_backend.service.BlacklistService;
+import com.workflow.general_backend.entity.UserGroup;
+import com.workflow.general_backend.mapper.UserGroupMapper;
+import com.workflow.general_backend.service.UserGroupService;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
@@ -12,26 +12,26 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-public class BlacklistServiceImpl implements BlacklistService {
+public class UserGroupServiceImpl implements UserGroupService {
     @Resource
-    BlacklistMapper blacklistMapper;
+    UserGroupMapper userGroupMapper;
     @Override
-    public List<Blacklist> findAll() {
-        return blacklistMapper.findAll();
+    public List<UserGroup> findAll() {
+        return userGroupMapper.findAll();
     }
 
     @Override
-    public List<Blacklist> findById(String bid) {
-        return blacklistMapper.findById(bid);
+    public List<UserGroup> findById(String gid) {
+        return userGroupMapper.findById(gid);
     }
 
     @Override
-    public CommonResult insert(Blacklist blacklist) {
+    public CommonResult insert(UserGroup userGroup) {
         CommonResult commonResult = new CommonResult();
         String uuid = UUID.randomUUID().toString();
-        blacklist.setBid(uuid);
+        userGroup.setGid(uuid);
         try {
-            int res = blacklistMapper.insert(blacklist);
+            int res = userGroupMapper.insert(userGroup);
             if (res == 1) {
                 commonResult.setStatus("OK");
             } else {
@@ -43,13 +43,12 @@ public class BlacklistServiceImpl implements BlacklistService {
             commonResult.setMsg(e.toString());
             return commonResult;
         }
-
     }
 
     @Override
-    public CommonResult deleteById(String bid) {
+    public CommonResult deleteById(String gid) {
         CommonResult commonResult = new CommonResult();
-        int res = blacklistMapper.deleteById(bid);
+        int res = userGroupMapper.deleteById(gid);
         if (res == 1) {
             commonResult.setStatus("OK");
         } else {
@@ -59,10 +58,10 @@ public class BlacklistServiceImpl implements BlacklistService {
     }
 
     @Override
-    public CommonResult update(Blacklist blacklist) {
+    public CommonResult update(UserGroup userGroup) {
         CommonResult commonResult = new CommonResult();
         try {
-            int res = blacklistMapper.update(blacklist);
+            int res = userGroupMapper.update(userGroup);
             if (res == 1) {
                 commonResult.setStatus("OK");
             } else {

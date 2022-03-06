@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.workflow.general_backend.mapper.UserGroupMapper">
+    <resultMap id="UserGroupResultMap" type="com.workflow.general_backend.entity.UserGroup">
+        <!-- 定义主键 ,非常重要。如果是多个字段,则定义多个id -->
+        <!-- property：主键在pojo中的属性名 -->
+        <!-- column：主键在数据库中的列名 -->
+        <id property="gid" column="gid"/>
+        <!-- 定义普通属性 -->
+        <result property="name" column="name"/>
+        <result property="users" column="users"/>
+        <result property="description" column="description"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.workflow.general_backend.entity.UserGroup">
+        insert into user_group(gid,name,users,description)
+        values (#{gid},#{name},#{users},#{description})
+    </insert>
+    <update id="update" parameterType="com.workflow.general_backend.entity.UserGroup">
+        update user_group
+        set name=#{name},
+            users=#{users},
+            description=#{description}
+        where gid=#{gid}
+    </update>
+    <delete id="deleteById" parameterType="String">
+        delete from user_group
+        where gid=#{gid}
+    </delete>
+    <select id="findAll" resultMap="UserGroupResultMap">
+        select *
+        from
+            user_group
+    </select>
+    <select id="findById" parameterType="String" resultMap="UserGroupResultMap">
+        select *
+        from
+            user_group
+        where gid=#{gid}
+    </select>
+
+
+</mapper>
