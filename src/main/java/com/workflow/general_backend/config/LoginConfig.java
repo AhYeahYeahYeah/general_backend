@@ -28,7 +28,8 @@ public class LoginConfig implements WebMvcConfigurer {
                 "/**/*.js",              //js静态资源
                 "/**/*.css",             //css静态资源
                 "/**/*.woff",
-                "/**/*.ttf"
+                "/**/*.ttf",
+                "/error"
         );
 
     }
