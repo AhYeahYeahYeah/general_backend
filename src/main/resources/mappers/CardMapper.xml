@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.workflow.general_backend.mapper.CardMapper">
+    <resultMap id="CardResultMap" type="com.workflow.general_backend.entity.Card">
+        <!-- 定义主键 ,非常重要。如果是多个字段,则定义多个id -->
+        <!-- property：主键在pojo中的属性名 -->
+        <!-- column：主键在数据库中的列名 -->
+        <id property="cardNum" column="card_num"/>
+        <!-- 定义普通属性 -->
+        <result property="money" column="money"/>
+    </resultMap>
+
+    <update id="update" parameterType="com.workflow.general_backend.entity.Card">
+        update card
+        set money=#{money}
+        where card_num=#{cardNum}
+    </update>
+    <select id="findById" parameterType="String" resultMap="CardResultMap">
+        select *
+        from card
+        where card_num=#{cardNum}
+    </select>
+</mapper>

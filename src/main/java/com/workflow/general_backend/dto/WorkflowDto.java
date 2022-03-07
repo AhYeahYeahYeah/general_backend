@@ -1,14 +1,15 @@
-package com.workflow.general_backend.entity;
+package com.workflow.general_backend.dto;
 
+import com.alibaba.fastjson.JSONObject;
+import com.workflow.general_backend.entity.Workflow;
 
-public class Workflow {
-
+public class WorkflowDto extends Workflow {
     private String fid;
     private String name;
     private String description;
     private String version;
     private String flow;
-
+    private JSONObject metadataWorkflow;
 
     public String getFid() {
         return fid;
@@ -53,4 +54,11 @@ public class Workflow {
         this.flow = flow;
     }
 
+    public JSONObject getMetadataWorkflow() {
+        return metadataWorkflow;
+    }
+
+    public void setMetadataWorkflow(JSONObject metadataWorkflow) {
+        this.metadataWorkflow = metadataWorkflow;
+    }
 }

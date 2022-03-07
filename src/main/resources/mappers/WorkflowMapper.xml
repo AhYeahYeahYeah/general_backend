@@ -12,7 +12,7 @@
         set name=#{name},
             description=#{description},
             version=#{version},
-            flow=#{flwow}
+            flow=#{flow}
         where fid = #{fid}
     </update>
     <delete id="deleteById" parameterType="string">

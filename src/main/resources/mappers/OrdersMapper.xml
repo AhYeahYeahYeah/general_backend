@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.workflow.general_backend.mapper.OrdersMapper">
+    <resultMap id="OrdersResultMap" type="com.workflow.general_backend.entity.Orders">
+        <!-- 定义主键 ,非常重要。如果是多个字段,则定义多个id -->
+        <!-- property：主键在pojo中的属性名 -->
+        <!-- column：主键在数据库中的列名 -->
+        <id property="oid" column="oid"/>
+        <!-- 定义普通属性 -->
+        <result property="pid" column="pid"/>
+        <result property="cid" column="cid"/>
+        <result property="payment" column="payment"/>
+        <result property="orderDate" column="order_date"/>
+        <result property="expireDate" column="expire_date"/>
+        <result property="workflowId" column="workflow_id"/>
+        <result property="status" column="status"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.workflow.general_backend.entity.Orders">
+        insert into orders(oid, pid, cid, payment, order_date, expire_date, workflow_id, status)
+        values (#{oid}, #{pid}, #{cid}, #{payment}, #{orderDate}, #{expireDate}, #{workflowId}, #{status})
+    </insert>
+    <update id="update" parameterType="com.workflow.general_backend.entity.Orders">
+        update orders
+        set pid=#{pid},
+            cid=#{cid},
+            payment=#{payment},
+            order_date=#{orderDate},
+            expire_date=#{expireDate},
+            workflow_id=#{workflowId}
+        where oid = #{oid}
+    </update>
+
+
+    <select id="findAll" resultMap="OrdersResultMap">
+        select *
+        from orders
+    </select>
+    <select id="findById" parameterType="String" resultMap="OrdersResultMap">
+        select *
+        from orders
+        where oid = #{oid}
+    </select>
+</mapper>

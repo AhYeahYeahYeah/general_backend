@@ -13,9 +13,9 @@ public interface WorkflowMapper {
 
     List<Workflow> findById(String fid);
 
-    int insert(Workflow workflow);
+    int insert(Workflow workflow) throws DataAccessException;
 
     int deleteById(String fid);
 
-    int update(Workflow workflow);
+    int update(Workflow workflow) throws DataAccessException;
 }
