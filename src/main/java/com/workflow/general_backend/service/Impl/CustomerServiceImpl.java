@@ -3,7 +3,9 @@ package com.workflow.general_backend.service.Impl;
 import com.workflow.general_backend.dto.CommonResult;
 import com.workflow.general_backend.dto.CustomerDto;
 import com.workflow.general_backend.entity.Customer;
+import com.workflow.general_backend.entity.CustomerProfile;
 import com.workflow.general_backend.mapper.CustomerMapper;
+import com.workflow.general_backend.mapper.CustomerProfileMapper;
 import com.workflow.general_backend.service.CustomerService;
 import com.workflow.general_backend.utils.JwtUtils;
 import com.workflow.general_backend.utils.RedisUtils;
@@ -23,6 +25,8 @@ public class CustomerServiceImpl implements CustomerService {
     RedisUtils redisUtils;
     @Resource
     CustomerMapper customerMapper;
+    @Resource
+    CustomerProfileMapper customerProfileMapper;
 
     @Override
     public CustomerDto clogin(Customer customer) {
@@ -64,8 +68,11 @@ public class CustomerServiceImpl implements CustomerService {
         String uuid = UUID.randomUUID().toString();
         customer.setCid(uuid);
         int res = customerMapper.insert(customer);
+        CustomerProfile customerProfile = new CustomerProfile();
+        customerProfile.setCid(customer.getCid());
+        int re = customerProfileMapper.insert(customerProfile);
         // 判断后台操作成功条数，为1即正常，为0则失败。
-        if (res == 0) {
+        if (res == 0 || re == 0) {
             commonResult.setStatus("Failed");
             commonResult.setMsg("backend insert failed");
             return commonResult;
@@ -130,7 +137,7 @@ public class CustomerServiceImpl implements CustomerService {
                 commonResult.setStatus("Failed");
             }
             return commonResult;
-        }catch (DataAccessException e){
+        } catch (DataAccessException e) {
             commonResult.setStatus("Failed");
             commonResult.setMsg(e.toString());
             return commonResult;
