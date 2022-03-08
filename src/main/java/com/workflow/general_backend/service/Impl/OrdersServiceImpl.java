@@ -45,7 +45,14 @@ public class OrdersServiceImpl implements OrdersService {
         float payment=(float) orders.getPayment();
         List<CustomerProfile> cp = customerProfileMapper.findById(orders.getCid());
         Card card=cardMapper.findById(cp.get(0).getCardNum());
-        card.setMoney(card.getMoney()-payment);
+        float last=card.getMoney()-payment;
+        if(last<0){
+            System.out.println("money not enough");
+            commonResult.setStatus("Failed");
+            commonResult.setMsg("money not enough");
+            return commonResult;
+        }
+        card.setMoney(last);
         cardMapper.update(card);
         System.out.println("set money success");
         try {
