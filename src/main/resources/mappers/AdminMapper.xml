@@ -10,7 +10,6 @@
     <update id="update" parameterType="com.workflow.general_backend.entity.Admin">
         update admin
         set account=#{account},
-            password=#{password},
             aname=#{aname},
             nick_name=#{nickName},
             avatar=#{avatar},

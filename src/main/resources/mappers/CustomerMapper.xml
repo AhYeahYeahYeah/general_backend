@@ -10,7 +10,6 @@
     <update id="update" parameterType="com.workflow.general_backend.entity.Customer">
         update customer
         set account=#{account},
-            password=#{password},
             cname=#{cname},
             nick_name=#{nickName},
             avatar=#{avatar}
