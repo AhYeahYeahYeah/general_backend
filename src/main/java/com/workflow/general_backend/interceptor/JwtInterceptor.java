@@ -40,7 +40,7 @@ public class JwtInterceptor implements HandlerInterceptor {
         System.out.println(method);
 
         System.out.println(url);
-        if (url.equals("/v1/entity/workflow")) {
+        if (url.equals("/v1/entity/workflow")||url.equals("/v1/entity/serviceinfo")) {
             required = "1";
             System.out.println("服务编排");
         } else if (url.equals("/v1/entity/customer")) {
