@@ -9,10 +9,12 @@
     </insert>
     <update id="update" parameterType="com.workflow.general_backend.entity.Workflow">
         update workflow
-        set name=#{name},
-            description=#{description},
-            version=#{version},
-            flow=#{flow}
+        <set>
+            <if test="name != null and name != ''">name=#{name},</if>
+            <if test="description != null and description != ''">description=#{description},</if>
+            <if test="version != null and version != ''">password=#{password},</if>
+            <if test="flow != null and flow != '[]'">flow=#{flow},</if>
+        </set>
         where fid = #{fid}
     </update>
     <delete id="deleteById" parameterType="string">
