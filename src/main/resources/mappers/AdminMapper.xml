@@ -9,11 +9,14 @@
     </insert>
     <update id="update" parameterType="com.workflow.general_backend.entity.Admin">
         update admin
-        set account=#{account},
-            aname=#{aname},
-            nick_name=#{nickName},
-            avatar=#{avatar},
-            permissions=#{permissions}
+        <set>
+            <if test="account != null and account != ''">account=#{account},</if>
+            <if test="password != null and password != ''">password=#{password},</if>
+            <if test="aname != null and aname != ''">aname=#{aname},</if>
+            <if test="nickName != null and nickName != ''">nick_name=#{nickName},</if>
+            <if test="avatar != null and avatar != ''">avatar=#{avatar},</if>
+            <if test="permissions != null and permissions != '[]'">permissions=#{permissions},</if>
+        </set>
         where aid = #{aid}
     </update>
 
