@@ -11,6 +11,7 @@ import com.workflow.general_backend.mapper.OrdersMapper;
 import com.workflow.general_backend.mapper.ProductMapper;
 import com.workflow.general_backend.mapper.WorkflowMapper;
 import org.springframework.amqp.core.Message;
+import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Component;
@@ -31,8 +32,6 @@ public class RMQReceiveService {
     ProductMapper productMapper;
     @Resource
     WorkflowMapper workflowMapper;
-    @Resource
-    OrdersMapper ordersMapper;
     // 监听订单队列
     @RabbitListener(queues = ORDER_QUEUE)
     public void orderQueueListener(Message message, Channel channel) throws IOException {
@@ -63,8 +62,9 @@ public class RMQReceiveService {
         String url = "http://8.141.159.53:5000/api/workflow/" + name;
         // 1、使用postForObject请求接口
         String result = template.postForObject(url, json, String.class);
-        System.out.println("resultID:-----"+result);
-
+        System.out.println("resultWorkflowID:-----"+result);
+        //通过websocket将workflowid发送到前端
+        WebSocketServer.sendInfo(result,orders.getOid());
 
     }
 
@@ -78,12 +78,8 @@ public class RMQReceiveService {
         System.out.println("路由key= [ " + receivedRoutingKey + " ]接收到的消息= [ " + rmqBody.getOrders().getOid() + "  重传次数：" + rmqBody.getNumber() + " ]");
         System.out.println("-----------------------");
         Orders orders= rmqBody.getOrders();
-        orders.setStatus(2);
-        try {
-            ordersMapper.update(orders);
-        }catch (DataAccessException e){
-            System.out.println(e.toString());
-        }
+        //通过websocket将错误发送到前端
+        WebSocketServer.sendInfo("error",orders.getOid());
         //Thread.sleep(5000);
         // 发送ack给消息队列，收到消息了
         channel.basicAck(message.getMessageProperties().getDeliveryTag(), true);

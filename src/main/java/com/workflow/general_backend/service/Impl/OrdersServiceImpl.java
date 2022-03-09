@@ -74,8 +74,15 @@ public class OrdersServiceImpl implements OrdersService {
                 ObjectMapper objectMapper=new ObjectMapper();
                 Message message= MessageBuilder.withBody(objectMapper.writeValueAsBytes(rmqBody)).setDeliveryMode(MessageDeliveryMode.PERSISTENT).build();
                 String response=publishService.sendMsg(message);
-                commonResult.setStatus("OK");
-                commonResult.setMsg(response);
+                System.out.println("消息发送,oid="+orders.getOid());
+                if(response.equals("OK")){
+                    commonResult.setStatus("OK");
+                    commonResult.setMsg(orders.getOid());
+                }else {
+                    commonResult.setStatus("Failed");
+                    commonResult.setMsg(response);
+                }
+
 
 
             } catch (Exception e) {
