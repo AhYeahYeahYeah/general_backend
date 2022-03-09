@@ -3,12 +3,14 @@ package com.workflow.general_backend.dto;
 import com.alibaba.fastjson.JSONObject;
 import com.workflow.general_backend.entity.Workflow;
 
+import java.util.ArrayList;
+
 public class WorkflowDto extends Workflow {
     private String fid;
     private String name;
     private String description;
     private String version;
-    private String flow;
+    private ArrayList<JSONObject> flow;
     private JSONObject metadataWorkflow;
 
     public String getFid() {
@@ -46,11 +48,13 @@ public class WorkflowDto extends Workflow {
         this.version = version;
     }
 
-    public String getFlow() {
+    @Override
+    public ArrayList<JSONObject> getFlow() {
         return flow;
     }
 
-    public void setFlow(String flow) {
+    @Override
+    public void setFlow(ArrayList<JSONObject> flow) {
         this.flow = flow;
     }
 
