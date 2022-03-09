@@ -1,17 +1,13 @@
 package com.workflow.general_backend.entity;
 
 
-import com.alibaba.fastjson.JSONObject;
-
-import java.util.ArrayList;
-
 public class Workflow {
 
     private String fid;
     private String name;
     private String description;
     private String version;
-    private ArrayList<JSONObject> flow;
+    private String flow;
 
 
     public String getFid() {
@@ -49,11 +45,12 @@ public class Workflow {
         this.version = version;
     }
 
-    public ArrayList<JSONObject> getFlow() {
+    public String getFlow() {
         return flow;
     }
 
-    public void setFlow(ArrayList<JSONObject> flow) {
+    public void setFlow(String flow) {
         this.flow = flow;
     }
+
 }
