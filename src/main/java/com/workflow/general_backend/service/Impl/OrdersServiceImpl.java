@@ -1,10 +1,14 @@
 package com.workflow.general_backend.service.Impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.workflow.general_backend.dto.CommonResult;
 import com.workflow.general_backend.entity.*;
 import com.workflow.general_backend.mapper.*;
 import com.workflow.general_backend.service.OrdersService;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessageBuilder;
+import org.springframework.amqp.core.MessageDeliveryMode;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,9 +27,7 @@ public class OrdersServiceImpl implements OrdersService {
     @Resource
     CardMapper cardMapper;
     @Resource
-    ProductMapper productMapper;
-    @Resource
-    WorkflowMapper workflowMapper;
+    RMQPublishService publishService;
     @Override
     public List<Orders> findAll() {
         return ordersMapper.findAll();
@@ -42,6 +44,7 @@ public class OrdersServiceImpl implements OrdersService {
         CommonResult commonResult = new CommonResult();
         String uuid = UUID.randomUUID().toString();
         orders.setOid(uuid);
+        //扣款
         float payment=(float) orders.getPayment();
         List<CustomerProfile> cp = customerProfileMapper.findById(orders.getCid());
         Card card=cardMapper.findById(cp.get(0).getCardNum());
@@ -56,6 +59,8 @@ public class OrdersServiceImpl implements OrdersService {
         cardMapper.update(card);
         System.out.println("set money success");
         try {
+            //插入订单
+            orders.setStatus(0);
             int res = ordersMapper.insert(orders);
             if(res!=1){
                 commonResult.setStatus("Failed");
@@ -63,26 +68,15 @@ public class OrdersServiceImpl implements OrdersService {
                 return commonResult;
             }
             try {
-                RestTemplate template = new RestTemplate();
-
-                // 封装参数，千万不要替换为Map与HashMap，否则参数无法传递
-                JSONObject json = new JSONObject();
-                json.put("pid", orders.getPid());
-                json.put("cid", orders.getCid());
-                json.put("oid",orders.getOid());
-                json.put("payment",orders.getPayment());
-                json.put("status",0);
-                List<Product> product=productMapper.findById(orders.getPid());
-                String fid=product.get(0).getFid();
-                System.out.println(fid);
-                List<Workflow> workflows=workflowMapper.findById(fid);
-                String name=workflows.get(0).getName();
-                String url="http://8.141.159.53:5000/api/workflow/"+name;
-                // 1、使用postForObject请求接口
-                String result = template.postForObject(url, json, String.class);
-                System.out.println(result);
+                RmqBody rmqBody=new RmqBody();
+                rmqBody.setOrders(orders);
+                rmqBody.setNumber(0);
+                ObjectMapper objectMapper=new ObjectMapper();
+                Message message= MessageBuilder.withBody(objectMapper.writeValueAsBytes(rmqBody)).setDeliveryMode(MessageDeliveryMode.PERSISTENT).build();
+                String response=publishService.sendMsg(message);
                 commonResult.setStatus("OK");
-                commonResult.setMsg(result);
+                commonResult.setMsg(response);
+
 
             } catch (Exception e) {
                 e.printStackTrace();
