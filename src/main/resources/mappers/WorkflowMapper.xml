@@ -12,7 +12,7 @@
         <set>
             <if test="name != null and name != ''">name=#{name},</if>
             <if test="description != null and description != ''">description=#{description},</if>
-            <if test="version != null and version != ''">password=#{password},</if>
+            <if test="version != null and version != ''">version=#{version},</if>
             <if test="flow != null">flow=#{flow},</if>
         </set>
         where fid = #{fid}
