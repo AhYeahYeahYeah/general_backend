@@ -99,6 +99,35 @@ public class WorkflowServiceImpl implements WorkflowService {
     @Override
     public CommonResult update(WorkflowDto workflowDto) {
         CommonResult commonResult = new CommonResult();
+        
+        try {
+            RestTemplate template = new RestTemplate();
+
+            // 封装参数，千万不要替换为Map与HashMap，否则参数无法传递
+//            JSONObject json = JSONObject.parseObject(workflowDto.getMetadataWorkflow());
+            JSONObject json =workflowDto.getMetadataWorkflow();
+
+
+            String url = "http://8.141.159.53:5000/api/metadata/workflow/";
+            // 1、使用postForObject请求接口
+            ResponseEntity<String> result = template.postForEntity(url, json, String.class);
+            String status = String.valueOf(result.getStatusCode());
+
+            System.out.println(result + "\n" + status);
+            if (status.equals("200 OK"))
+                commonResult.setStatus("OK");
+            else {
+                commonResult.setStatus("Failed");
+                commonResult.setMsg("conductor cannot save metaworkflow");
+                return commonResult;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            commonResult.setStatus("Failed");
+            commonResult.setMsg(e.toString());
+            return commonResult;
+        }
         try {
             Workflow workflow = new Workflow();
             workflow.setFid(workflowDto.getFid());
