@@ -1,7 +1,9 @@
 package com.workflow.general_backend.interceptor;
 
 import com.workflow.general_backend.entity.Admin;
+import com.workflow.general_backend.entity.Customer;
 import com.workflow.general_backend.mapper.AdminMapper;
+import com.workflow.general_backend.mapper.CustomerMapper;
 import com.workflow.general_backend.utils.JwtUtils;
 import com.workflow.general_backend.utils.RedisUtils;
 import io.jsonwebtoken.Claims;
@@ -28,6 +30,8 @@ public class JwtInterceptor implements HandlerInterceptor {
     RedisUtils redisUtils;
     @Resource
     AdminMapper adminMapper;
+    @Resource
+    CustomerMapper customerMapper;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -87,7 +91,10 @@ public class JwtInterceptor implements HandlerInterceptor {
             }
             if (required.equals(""))
                 return true;
-
+            Customer customer = customerMapper.findCustomerByAccount(account);
+            if(customer!=null){
+                return true;
+            }
             Admin admin = adminMapper.findAdminByAccount(account);
             String pids = admin.getPermissions();
             pids = pids.replace("[", "").replace("]", "");
