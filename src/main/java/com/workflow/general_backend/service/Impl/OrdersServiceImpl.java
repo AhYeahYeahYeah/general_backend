@@ -45,7 +45,7 @@ public class OrdersServiceImpl implements OrdersService {
         String uuid = UUID.randomUUID().toString();
         orders.setOid(uuid);
         //扣款
-        float payment=(float) orders.getPayment();
+        float payment=orders.getPayment();
         List<CustomerProfile> cp = customerProfileMapper.findById(orders.getCid());
         Card card=cardMapper.findById(cp.get(0).getCardNum());
         float last=card.getMoney()-payment;

@@ -6,11 +6,11 @@ public class Orders {
   private String oid;
   private String pid;
   private String cid;
-  private double payment;
+  private float payment;
   private String orderDate;
   private String expireDate;
   private String workflowId;
-  private long status;
+  private int status;
 
 
   public String getOid() {
@@ -40,11 +40,11 @@ public class Orders {
   }
 
 
-  public double getPayment() {
+  public float getPayment() {
     return payment;
   }
 
-  public void setPayment(double payment) {
+  public void setPayment(float payment) {
     this.payment = payment;
   }
 
@@ -76,11 +76,11 @@ public class Orders {
   }
 
 
-  public long getStatus() {
+  public int getStatus() {
     return status;
   }
 
-  public void setStatus(long status) {
+  public void setStatus(int status) {
     this.status = status;
   }
 

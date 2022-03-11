@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.workflow.general_backend.mapper.LogMapper">
+    <delete id="deleteById" parameterType="string">
+        delete from log where lid=#{lid}
+    </delete>
+
+    <select id="findAll" resultType="com.workflow.general_backend.entity.Log">
+        SELECT * from log
+    </select>
+    <select id="findById" parameterType="string" resultType="com.workflow.general_backend.entity.Log">
+        SELECT * from log where lid=#{lid}
+    </select>
+</mapper>
