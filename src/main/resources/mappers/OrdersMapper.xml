@@ -23,12 +23,14 @@
     </insert>
     <update id="update" parameterType="com.workflow.general_backend.entity.Orders">
         update orders
-        set pid=#{pid},
-            cid=#{cid},
-            payment=#{payment},
-            order_date=#{orderDate},
-            expire_date=#{expireDate},
-            workflow_id=#{workflowId}
+        <set>
+            <if test="pid != null and pid != ''">pid=#{pid},</if>
+            <if test="cid != null and cid != ''">cid=#{cid},</if>
+            <if test="payment != null">payment=#{payment},</if>
+            <if test="orderDate != null and orderDate != ''">order_date=#{orderDate},</if>
+            <if test="expireDate != null and expireDate != ''">expire_date=#{expireDate},</if>
+            <if test="workflowId != null and workflowId != ''">workflow_id=#{workflowId},</if>
+        </set>
         where oid = #{oid}
     </update>
 
@@ -46,5 +48,6 @@
         select *
         from orders
         where cid = #{cid}
+        order by order_date desc
     </select>
 </mapper>
