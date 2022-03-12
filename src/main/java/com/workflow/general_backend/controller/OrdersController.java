@@ -28,6 +28,11 @@ public class OrdersController {
         return ordersService.findById(oid);
     }
 
+    @GetMapping("/getByCustomer/{cid}")
+    public List<Orders> findByCid(@PathVariable("cid") String cid) {
+        return ordersService.findByCid(cid);
+    }
+
     @PostMapping
     public CommonResult insert(@RequestBody Orders orders) {
         return ordersService.insert(orders);

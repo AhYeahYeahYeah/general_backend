@@ -13,6 +13,8 @@ public interface OrdersMapper {
 
     List<Orders> findById(String oid);
 
+    List<Orders> findByCid(String cid);
+
     int insert(Orders orders) throws DataAccessException;
 
     int update(Orders orders) throws DataAccessException;

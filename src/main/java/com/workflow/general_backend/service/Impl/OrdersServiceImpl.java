@@ -39,6 +39,11 @@ public class OrdersServiceImpl implements OrdersService {
     }
 
     @Override
+    public List<Orders> findByCid(String cid) {
+        return ordersMapper.findByCid(cid);
+    }
+
+    @Override
     @Transactional
     public CommonResult insert(Orders orders) {
         CommonResult commonResult = new CommonResult();
@@ -117,4 +122,6 @@ public class OrdersServiceImpl implements OrdersService {
             return commonResult;
         }
     }
+
+
 }

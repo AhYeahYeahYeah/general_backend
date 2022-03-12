@@ -42,4 +42,9 @@
         from orders
         where oid = #{oid}
     </select>
+    <select id="findByCid" parameterType="String" resultMap="OrdersResultMap">
+        select *
+        from orders
+        where cid = #{cid}
+    </select>
 </mapper>

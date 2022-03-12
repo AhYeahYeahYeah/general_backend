@@ -10,6 +10,8 @@ public interface OrdersService {
 
     List<Orders> findById(String oid);
 
+    List<Orders> findByCid(String cid);
+
     CommonResult insert(Orders orders);
 
     CommonResult update(Orders orders);
