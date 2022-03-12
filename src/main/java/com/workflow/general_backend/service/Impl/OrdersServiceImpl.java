@@ -3,6 +3,7 @@ package com.workflow.general_backend.service.Impl;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.workflow.general_backend.dto.CommonResult;
+import com.workflow.general_backend.dto.OrdersDto;
 import com.workflow.general_backend.entity.*;
 import com.workflow.general_backend.mapper.*;
 import com.workflow.general_backend.service.OrdersService;
@@ -45,13 +46,13 @@ public class OrdersServiceImpl implements OrdersService {
 
     @Override
     @Transactional
-    public CommonResult insert(Orders orders) {
+    public CommonResult insert(OrdersDto ordersDto) {
         CommonResult commonResult = new CommonResult();
         String uuid = UUID.randomUUID().toString();
-        orders.setOid(uuid);
+        ordersDto.setOid(uuid);
         //扣款
-        float payment=orders.getPayment();
-        List<CustomerProfile> cp = customerProfileMapper.findById(orders.getCid());
+        float payment=ordersDto.getPayment();
+        List<CustomerProfile> cp = customerProfileMapper.findById(ordersDto.getCid());
         Card card=cardMapper.findById(cp.get(0).getCardNum());
         float last=card.getMoney()-payment;
         if(last<0){
@@ -63,6 +64,13 @@ public class OrdersServiceImpl implements OrdersService {
         card.setMoney(last);
         cardMapper.update(card);
         System.out.println("set money success");
+        Orders orders = new Orders();
+        orders.setOid(uuid);
+        orders.setCid(ordersDto.getCid());
+        orders.setPid(ordersDto.getPid());
+        orders.setPayment(ordersDto.getPayment());
+        orders.setOrderDate(ordersDto.getOrderDate());
+        orders.setExpireDate(ordersDto.getExpireDate());
         try {
             //插入订单
             orders.setStatus(0);
@@ -74,15 +82,15 @@ public class OrdersServiceImpl implements OrdersService {
             }
             try {
                 RmqBody rmqBody=new RmqBody();
-                rmqBody.setOrders(orders);
+                rmqBody.setOrders(ordersDto);
                 rmqBody.setNumber(0);
                 ObjectMapper objectMapper=new ObjectMapper();
                 Message message= MessageBuilder.withBody(objectMapper.writeValueAsBytes(rmqBody)).setDeliveryMode(MessageDeliveryMode.PERSISTENT).build();
                 String response=publishService.sendMsg(message);
-                System.out.println("消息发送,oid="+orders.getOid());
+                System.out.println("消息发送,oid="+ordersDto.getOid());
                 if(response.equals("OK")){
                     commonResult.setStatus("OK");
-                    commonResult.setMsg(orders.getOid());
+                    commonResult.setMsg(ordersDto.getOid());
                 }else {
                     commonResult.setStatus("Failed");
                     commonResult.setMsg(response);

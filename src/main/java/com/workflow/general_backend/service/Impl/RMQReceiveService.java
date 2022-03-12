@@ -3,6 +3,7 @@ package com.workflow.general_backend.service.Impl;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.client.Channel;
+import com.workflow.general_backend.dto.OrdersDto;
 import com.workflow.general_backend.entity.Orders;
 import com.workflow.general_backend.entity.Product;
 import com.workflow.general_backend.entity.RmqBody;
@@ -39,21 +40,21 @@ public class RMQReceiveService {
         ObjectMapper objectMapper = new ObjectMapper();
         String receivedRoutingKey = message.getMessageProperties().getReceivedRoutingKey();
         RmqBody rmqBody = objectMapper.readValue(bytes, RmqBody.class);
-        System.out.println("路由key= [ " + receivedRoutingKey + " ]接收到的消息= [ " + rmqBody.getOrders().getOid() + "  重传次数：" + rmqBody.getNumber() + " ]");
+        System.out.println("路由key= [ " + receivedRoutingKey + " ]接收到的消息= [ " + rmqBody.getOrdersDto().getOid() + "  重传次数：" + rmqBody.getNumber() + " ]");
         System.out.println("-----------------------");
         //发送ack给消息队列,收到消息了
         channel.basicAck(message.getMessageProperties().getDeliveryTag(), true);
 
         //post Conductor
-        Orders orders= rmqBody.getOrders();
+        OrdersDto orders= rmqBody.getOrdersDto();
         RestTemplate template = new RestTemplate();
         // 封装参数，千万不要替换为Map与HashMap，否则参数无法传递
         JSONObject json = new JSONObject();
         json.put("pid", orders.getPid());
         json.put("cid", orders.getCid());
         json.put("oid", orders.getOid());
-        json.put("payment", orders.getPayment());
-        json.put("status", 0);
+        json.put("phoneNum",orders.getPhoneNum());
+        json.put("password",orders.getPassword());
         List<Product> product = productMapper.findById(orders.getPid());
         String fid = product.get(0).getFid();
         System.out.println(fid);
@@ -75,9 +76,9 @@ public class RMQReceiveService {
         ObjectMapper objectMapper = new ObjectMapper();
         String receivedRoutingKey = message.getMessageProperties().getReceivedRoutingKey();
         RmqBody rmqBody = objectMapper.readValue(bytes, RmqBody.class);
-        System.out.println("路由key= [ " + receivedRoutingKey + " ]接收到的消息= [ " + rmqBody.getOrders().getOid() + "  重传次数：" + rmqBody.getNumber() + " ]");
+        System.out.println("路由key= [ " + receivedRoutingKey + " ]接收到的消息= [ " + rmqBody.getOrdersDto().getOid() + "  重传次数：" + rmqBody.getNumber() + " ]");
         System.out.println("-----------------------");
-        Orders orders= rmqBody.getOrders();
+        Orders orders= rmqBody.getOrdersDto();
         //通过websocket将错误发送到前端
         WebSocketServer.sendInfo("error",orders.getOid());
         //Thread.sleep(5000);

@@ -1,5 +1,6 @@
 package com.workflow.general_backend.entity;
 
+import com.workflow.general_backend.dto.OrdersDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,15 +9,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RmqBody {
-    private Orders orders;
+    private OrdersDto ordersDto;
     private int number;
 
-    public Orders getOrders() {
-        return orders;
+    public OrdersDto getOrdersDto() {
+        return ordersDto;
     }
 
-    public void setOrders(Orders orders) {
-        this.orders = orders;
+    public void setOrders(OrdersDto ordersDto) {
+        this.ordersDto = ordersDto;
     }
 
     public int getNumber() {

@@ -1,6 +1,7 @@
 package com.workflow.general_backend.controller;
 
 import com.workflow.general_backend.dto.CommonResult;
+import com.workflow.general_backend.dto.OrdersDto;
 import com.workflow.general_backend.entity.Orders;
 import com.workflow.general_backend.entity.Product;
 import com.workflow.general_backend.service.OrdersService;
@@ -34,8 +35,8 @@ public class OrdersController {
     }
 
     @PostMapping
-    public CommonResult insert(@RequestBody Orders orders) {
-        return ordersService.insert(orders);
+    public CommonResult insert(@RequestBody OrdersDto ordersDto) {
+        return ordersService.insert(ordersDto);
     }
 
     @PutMapping
