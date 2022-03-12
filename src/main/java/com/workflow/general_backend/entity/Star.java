@@ -2,7 +2,7 @@ package com.workflow.general_backend.entity;
 
 public class Star {
     private String cid;
-    private String content;
+    private String pid;
 
     public String getCid() {
         return cid;
@@ -12,11 +12,11 @@ public class Star {
         this.cid = cid;
     }
 
-    public String getContent() {
-        return content;
+    public String getPid() {
+        return pid;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setContent(String pid) {
+        this.pid = pid;
     }
 }

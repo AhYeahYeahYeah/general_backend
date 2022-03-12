@@ -9,7 +9,7 @@ import java.util.List;
 public interface StarService {
     List<Star> findAll();
 
-    Star findById(String cid);
+    List<Star> findById(String cid);
 
     CommonResult insert(Star star);
 

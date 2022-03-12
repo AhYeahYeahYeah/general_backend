@@ -3,14 +3,14 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.workflow.general_backend.mapper.StarMapper">
     <insert id="insert" parameterType="com.workflow.general_backend.entity.Star">
-        insert into star(cid,content)
-        values (#{cid},#{content})
+        insert into star(cid,pid)
+        values (#{cid},#{pid})
     </insert>
 
 
     <update id="update" parameterType="com.workflow.general_backend.entity.Star">
         update star
-        set content=#{content}
+        set pid=#{pid}
         where cid=#{cid}
     </update>
     <select id="findById" parameterType="String" resultType="com.workflow.general_backend.entity.Star">

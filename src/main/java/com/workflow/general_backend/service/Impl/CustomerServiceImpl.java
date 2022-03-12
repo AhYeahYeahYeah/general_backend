@@ -75,11 +75,8 @@ public class CustomerServiceImpl implements CustomerService {
         CustomerProfile customerProfile = new CustomerProfile();
         customerProfile.setCid(customer.getCid());
         int re = customerProfileMapper.insert(customerProfile);
-        Star star = new Star();
-        star.setCid(customer.getCid());
-        int r = starMapper.insert(star);
         // 判断后台操作成功条数，为1即正常，为0则失败。
-        if (res == 0 || re == 0 || r==0) {
+        if (res == 0 || re == 0) {
             commonResult.setStatus("Failed");
             commonResult.setMsg("backend insert failed");
             return commonResult;

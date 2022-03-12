@@ -22,7 +22,7 @@ public class StarServiceImpl implements StarService {
     }
 
     @Override
-    public Star findById(String cid) {
+    public List<Star> findById(String cid) {
         return starMapper.findById(cid);
     }
 

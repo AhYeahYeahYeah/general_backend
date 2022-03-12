@@ -21,7 +21,7 @@ public class StarController {
     }
 
     @GetMapping("/{cid}")
-    public Star findById(@PathVariable("cid") String cid) {
+    public List<Star> findById(@PathVariable("cid") String cid) {
         return starService.findById(cid);
     }
 

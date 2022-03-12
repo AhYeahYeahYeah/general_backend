@@ -11,7 +11,7 @@ import java.util.List;
 public interface StarMapper {
     List<Star> findAll();
 
-    Star findById(String cid);
+    List<Star> findById(String cid);
 
     int insert(Star star) throws DataAccessException;
 
