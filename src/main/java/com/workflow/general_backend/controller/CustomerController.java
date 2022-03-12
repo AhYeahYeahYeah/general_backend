@@ -20,6 +20,11 @@ public class CustomerController {
         return customerService.findAll();
     }
 
+    @GetMapping("/dashboard")
+    public List<Customer> findAllForDash() {
+        return customerService.findAll();
+    }
+
     @GetMapping("/{cid}")
     public List<Customer> findById(@PathVariable("cid") String cid) {
         return customerService.findById(cid);

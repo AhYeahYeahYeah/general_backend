@@ -1,6 +1,7 @@
 package com.workflow.general_backend.controller;
 
 import com.workflow.general_backend.dto.CommonResult;
+import com.workflow.general_backend.entity.Orders;
 import com.workflow.general_backend.entity.Product;
 import com.workflow.general_backend.service.ProductService;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +20,9 @@ public class ProductController {
     public List<Product> findAll() {
         return productService.findAll();
     }
+
+    @GetMapping("/dashboard")
+    public List<Product> findAllForDash(){return productService.findAll();}
 
     @GetMapping("/{pid}")
     public List<Product> findById(@PathVariable("pid") String pid) {

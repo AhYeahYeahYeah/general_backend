@@ -89,6 +89,11 @@ public class JwtInterceptor implements HandlerInterceptor {
             } else {
                 System.out.println("1-true");
             }
+            //开放仪表盘权限
+            if(url.equals("/v1/entity/customer/dashboard")||url.equals("/v1/entity/product/dashboard")
+                    ||url.equals("/v1/entity/orders/dashboard")){
+                return true;
+            }
             if (required.equals(""))
                 return true;
             Customer customer = customerMapper.findCustomerByAccount(account);

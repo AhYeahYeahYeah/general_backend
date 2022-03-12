@@ -20,6 +20,9 @@ public class OrdersController {
         return ordersService.findAll();
     }
 
+    @GetMapping("/dashboard")
+    public List<Orders> findAllForDash(){return ordersService.findAll();}
+
     @GetMapping("/{oid}")
     public List<Orders> findById(@PathVariable("oid") String oid) {
         return ordersService.findById(oid);
