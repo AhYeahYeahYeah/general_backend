@@ -4,8 +4,10 @@ import com.workflow.general_backend.dto.CommonResult;
 import com.workflow.general_backend.dto.CustomerDto;
 import com.workflow.general_backend.entity.Customer;
 import com.workflow.general_backend.entity.CustomerProfile;
+import com.workflow.general_backend.entity.Star;
 import com.workflow.general_backend.mapper.CustomerMapper;
 import com.workflow.general_backend.mapper.CustomerProfileMapper;
+import com.workflow.general_backend.mapper.StarMapper;
 import com.workflow.general_backend.service.CustomerService;
 import com.workflow.general_backend.utils.JwtUtils;
 import com.workflow.general_backend.utils.RedisUtils;
@@ -27,6 +29,8 @@ public class CustomerServiceImpl implements CustomerService {
     CustomerMapper customerMapper;
     @Resource
     CustomerProfileMapper customerProfileMapper;
+    @Resource
+    StarMapper starMapper;
 
     @Override
     public CustomerDto clogin(Customer customer) {
@@ -71,8 +75,11 @@ public class CustomerServiceImpl implements CustomerService {
         CustomerProfile customerProfile = new CustomerProfile();
         customerProfile.setCid(customer.getCid());
         int re = customerProfileMapper.insert(customerProfile);
+        Star star = new Star();
+        star.setCid(customer.getCid());
+        int r = starMapper.insert(star);
         // 判断后台操作成功条数，为1即正常，为0则失败。
-        if (res == 0 || re == 0) {
+        if (res == 0 || re == 0 || r==0) {
             commonResult.setStatus("Failed");
             commonResult.setMsg("backend insert failed");
             return commonResult;

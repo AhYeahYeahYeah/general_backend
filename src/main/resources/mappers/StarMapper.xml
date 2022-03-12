@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.workflow.general_backend.mapper.StarMapper">
+    <insert id="insert" parameterType="com.workflow.general_backend.entity.Star">
+        insert into star(cid,content)
+        values (#{cid},#{content})
+    </insert>
+
+
+    <update id="update" parameterType="com.workflow.general_backend.entity.Star">
+        update star
+        set content=#{content}
+        where cid=#{cid}
+    </update>
+    <select id="findById" parameterType="String" resultType="com.workflow.general_backend.entity.Star">
+        select *
+        from star
+        where cid=#{cid}
+    </select>
+    <select id="findAll" resultType="com.workflow.general_backend.entity.Star">
+        SELECT *
+        from star
+    </select>
+</mapper>

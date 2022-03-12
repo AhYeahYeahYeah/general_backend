@@ -1,8 +1,8 @@
 package com.workflow.general_backend.entity;
 
 public class Star {
-    String cid;
-    String content;
+    private String cid;
+    private String content;
 
     public String getCid() {
         return cid;
