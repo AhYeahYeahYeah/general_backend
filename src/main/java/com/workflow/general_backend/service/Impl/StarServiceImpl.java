@@ -35,6 +35,7 @@ public class StarServiceImpl implements StarService {
             int res = starMapper.insert(star);
             if (res == 1) {
                 commonResult.setStatus("OK");
+                commonResult.setMsg(uuid);
             } else {
                 commonResult.setStatus("Failed");
             }
