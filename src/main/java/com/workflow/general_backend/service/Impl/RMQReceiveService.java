@@ -35,7 +35,7 @@ public class RMQReceiveService {
     WorkflowMapper workflowMapper;
     // 监听订单队列
     @RabbitListener(queues = ORDER_QUEUE)
-    public void orderQueueListener(Message message, Channel channel) throws IOException {
+    public void orderQueueListener(Message message, Channel channel) throws IOException, InterruptedException {
         byte[] bytes = message.getBody();
         ObjectMapper objectMapper = new ObjectMapper();
         String receivedRoutingKey = message.getMessageProperties().getReceivedRoutingKey();
@@ -65,6 +65,7 @@ public class RMQReceiveService {
         String result = template.postForObject(url, json, String.class);
         System.out.println("resultWorkflowID:-----"+result);
         //通过websocket将workflowid发送到前端
+        Thread.sleep(2000);
         WebSocketServer.sendInfo(result,orders.getOid());
 
     }
