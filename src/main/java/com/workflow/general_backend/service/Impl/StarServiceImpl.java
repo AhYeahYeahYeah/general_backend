@@ -61,4 +61,16 @@ public class StarServiceImpl implements StarService {
             return commonResult;
         }
     }
+
+    @Override
+    public CommonResult delete(Star star) {
+        CommonResult commonResult = new CommonResult();
+        int res = starMapper.delete(star);
+        if (res == 1) {
+            commonResult.setStatus("OK");
+        } else {
+            commonResult.setStatus("Failed");
+        }
+        return commonResult;
+    }
 }

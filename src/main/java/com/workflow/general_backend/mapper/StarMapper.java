@@ -16,4 +16,6 @@ public interface StarMapper {
     int insert(Star star) throws DataAccessException;
 
     int update(Star star) throws DataAccessException;
+
+    int delete(Star star);
 }

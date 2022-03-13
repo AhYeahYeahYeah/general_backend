@@ -34,4 +34,7 @@ public class StarController {
     public CommonResult update(@RequestBody Star star) {
         return starService.update(star);
     }
+
+    @DeleteMapping
+    public CommonResult delete(@RequestBody Star star){return starService.delete(star);}
 }

@@ -14,4 +14,6 @@ public interface StarService {
     CommonResult insert(Star star);
 
     CommonResult update(Star star);
+
+    CommonResult delete(Star star);
 }
