@@ -34,18 +34,6 @@ public class CustomerProfileServiceImpl implements CustomerProfileService {
     @Override
     public CommonResult insert(CustomerProfile customerProfile) {
         CommonResult commonResult = new CommonResult();
-        if (customerProfile.getCardNum() != null && !Objects.equals(customerProfile.getCardNum(), "")) {
-            Card card = new Card();
-            card.setCardNum(customerProfile.getCardNum());
-            card.setCid(customerProfile.getCid());
-            card.setMoney(1000000);
-            int r = cardMapper.insert(card);
-            if (r != 1) {
-                commonResult.setStatus("Failed");
-                commonResult.setMsg("failed to insert card");
-                return commonResult;
-            }
-        }
         try {
             int res = customerProfileMapper.insert(customerProfile);
             if (res == 1) {
@@ -76,6 +64,18 @@ public class CustomerProfileServiceImpl implements CustomerProfileService {
     @Override
     public CommonResult update(CustomerProfile customerProfile) {
         CommonResult commonResult = new CommonResult();
+        if (customerProfile.getCardNum() != null && !Objects.equals(customerProfile.getCardNum(), "")) {
+            Card card = new Card();
+            card.setCardNum(customerProfile.getCardNum());
+            card.setCid(customerProfile.getCid());
+            card.setMoney(1000000);
+            int r = cardMapper.insert(card);
+            if (r != 1) {
+                commonResult.setStatus("Failed");
+                commonResult.setMsg("failed to insert card");
+                return commonResult;
+            }
+        }
         try {
             int res = customerProfileMapper.update(customerProfile);
             if (res == 1) {
