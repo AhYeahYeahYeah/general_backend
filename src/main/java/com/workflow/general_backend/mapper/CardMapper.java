@@ -9,5 +9,6 @@ import java.util.List;
 @Mapper
 public interface CardMapper {
     Card findById(String cardNum);
+    int insert(Card card);
     int update(Card card);
 }

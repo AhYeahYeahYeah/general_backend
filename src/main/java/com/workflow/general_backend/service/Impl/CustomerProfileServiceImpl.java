@@ -1,7 +1,9 @@
 package com.workflow.general_backend.service.Impl;
 
 import com.workflow.general_backend.dto.CommonResult;
+import com.workflow.general_backend.entity.Card;
 import com.workflow.general_backend.entity.CustomerProfile;
+import com.workflow.general_backend.mapper.CardMapper;
 import com.workflow.general_backend.mapper.CustomerProfileMapper;
 import com.workflow.general_backend.service.CustomerProfileService;
 import org.springframework.dao.DataAccessException;
@@ -9,12 +11,15 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
 public class CustomerProfileServiceImpl implements CustomerProfileService {
     @Resource
     CustomerProfileMapper customerProfileMapper;
+    @Resource
+    CardMapper cardMapper;
 
     @Override
     public List<CustomerProfile> findAll() {
@@ -29,6 +34,18 @@ public class CustomerProfileServiceImpl implements CustomerProfileService {
     @Override
     public CommonResult insert(CustomerProfile customerProfile) {
         CommonResult commonResult = new CommonResult();
+        if (customerProfile.getCardNum() != null && !Objects.equals(customerProfile.getCardNum(), "")) {
+            Card card = new Card();
+            card.setCardNum(customerProfile.getCardNum());
+            card.setCid(customerProfile.getCid());
+            card.setMoney(1000000);
+            int r = cardMapper.insert(card);
+            if (r != 1) {
+                commonResult.setStatus("Failed");
+                commonResult.setMsg("failed to insert card");
+                return commonResult;
+            }
+        }
         try {
             int res = customerProfileMapper.insert(customerProfile);
             if (res == 1) {

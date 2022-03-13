@@ -8,12 +8,20 @@
         <!-- column：主键在数据库中的列名 -->
         <id property="cardNum" column="card_num"/>
         <!-- 定义普通属性 -->
+        <result property="cid" column="cid"/>
         <result property="money" column="money"/>
     </resultMap>
+    <insert id="insert" parameterType="com.workflow.general_backend.entity.Card">
+        insert into card(card_num, cid, money)
+        values (#{cardNum}, #{cid}, #{money})
+    </insert>
 
     <update id="update" parameterType="com.workflow.general_backend.entity.Card">
         update card
-        set money=#{money}
+        <set>
+            <if test="cid != null and cid != ''">cid=#{cid},</if>
+            <if test="money != null">money=#{money},</if>
+        </set>
         where card_num=#{cardNum}
     </update>
     <select id="findById" parameterType="String" resultMap="CardResultMap">
