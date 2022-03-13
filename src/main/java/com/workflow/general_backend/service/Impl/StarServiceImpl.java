@@ -28,6 +28,8 @@ public class StarServiceImpl implements StarService {
 
     @Override
     public CommonResult insert(Star star) {
+        String uuid = UUID.randomUUID().toString();
+        star.setSid(uuid);
         CommonResult commonResult = new CommonResult();
         try {
             int res = starMapper.insert(star);
@@ -63,9 +65,9 @@ public class StarServiceImpl implements StarService {
     }
 
     @Override
-    public CommonResult delete(Star star) {
+    public CommonResult delete(String sid) {
         CommonResult commonResult = new CommonResult();
-        int res = starMapper.delete(star);
+        int res = starMapper.delete(sid);
         if (res == 1) {
             commonResult.setStatus("OK");
         } else {

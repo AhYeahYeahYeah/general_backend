@@ -35,6 +35,6 @@ public class StarController {
         return starService.update(star);
     }
 
-    @DeleteMapping
-    public CommonResult delete(@RequestBody Star star){return starService.delete(star);}
+    @DeleteMapping("/{sid}")
+    public CommonResult delete(@PathVariable("sid") String sid){return starService.delete(sid);}
 }

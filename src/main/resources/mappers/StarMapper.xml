@@ -3,21 +3,21 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.workflow.general_backend.mapper.StarMapper">
     <insert id="insert" parameterType="com.workflow.general_backend.entity.Star">
-        insert into star(cid, pid)
-        values (#{cid}, #{pid})
+        insert into star(sid, cid, pid)
+        values (#{sid}, #{cid}, #{pid})
     </insert>
 
 
     <update id="update" parameterType="com.workflow.general_backend.entity.Star">
         update star
-        set pid=#{pid}
-        where cid = #{cid}
+        set pid = #{pid},
+            cid = #{cid}
+        where sid = #{sid}
     </update>
-    <delete id="delete" parameterType="com.workflow.general_backend.entity.Star">
+    <delete id="delete" parameterType="String">
         delete
         from star
-        where pid = #{pid}
-          and cid = #{cid}
+        where sid = #{sid}
     </delete>
     <select id="findById" parameterType="String" resultType="com.workflow.general_backend.entity.Star">
         select *

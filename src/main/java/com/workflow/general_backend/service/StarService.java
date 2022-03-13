@@ -15,5 +15,5 @@ public interface StarService {
 
     CommonResult update(Star star);
 
-    CommonResult delete(Star star);
+    CommonResult delete(String sid);
 }
