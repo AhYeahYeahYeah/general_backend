@@ -14,12 +14,14 @@
     </insert>
     <update id="update" parameterType="com.workflow.general_backend.entity.CustomerProfile">
         update customer_profile
-        set sid=#{sid},
-            birthday=#{birthday},
-            phone_num=#{phoneNum},
-            address=#{address},
-            grouplist=#{grouplist},
-            card_num=#{cardNum}
+        <set>
+            <if test="sid != null and sid != ''">sid=#{sid},</if>
+            <if test="birthday != null and birthday != ''">birthday=#{birthday},</if>
+            <if test="phoneNum != null and phoneNum != ''">phone_num=#{phoneNum},</if>
+            <if test="address != null and address != ''">address=#{address},</if>
+            <if test="grouplist != null and grouplist != ''">grouplist=#{grouplist},</if>
+            <if test="cardNum != null and cardNum != ''">card_num=#{cardNum},</if>
+        </set>
         where cid = #{cid}
     </update>
     <delete id="deleteById" parameterType="string">
