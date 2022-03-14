@@ -30,7 +30,7 @@
             <if test="orderDate != null and orderDate != ''">order_date=#{orderDate},</if>
             <if test="expireDate != null and expireDate != ''">expire_date=#{expireDate},</if>
             <if test="workflowId != null and workflowId != ''">workflow_id=#{workflowId},</if>
-            <if test="status != null">status=#{status},</if>
+            <if test="status != null and status !=''">status=#{status},</if>
         </set>
         where oid = #{oid}
     </update>

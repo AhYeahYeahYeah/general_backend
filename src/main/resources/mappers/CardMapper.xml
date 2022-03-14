@@ -20,7 +20,7 @@
         update card
         <set>
             <if test="cid != null and cid != ''">cid=#{cid},</if>
-            <if test="money != null">money=#{money},</if>
+            <if test="money != null and money !=''">money=#{money},</if>
         </set>
         where card_num=#{cardNum}
     </update>
