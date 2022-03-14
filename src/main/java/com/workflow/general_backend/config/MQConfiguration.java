@@ -7,14 +7,14 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class MQConfiguration {
     //订单队列
-    public static final String ORDER_QUEUE = "order_queue____szx00000qr3ew3e3wqdfw";
-    public static final String ORDER_EXCHANGE = "order_exchange____szx00192ehqowduh291";
-    public static final String ORDER_ROUTE_KEY = "order_route_key____szxqe23918he139y4391";
+    public static final String ORDER_QUEUE = "order_queue1";
+    public static final String ORDER_EXCHANGE = "order_exchange1";
+    public static final String ORDER_ROUTE_KEY = "order_route_key1";
 
     //死信队列
-    public static final String DEAD_QUEUE = "dead_queue";
-    public static final String DEAD_EXCHANGE = "dead_exchange";
-    public static final String DEAD_ROUTE_KEY = "dead_route_key";
+    public static final String DEAD_QUEUE = "dead_queue1";
+    public static final String DEAD_EXCHANGE = "dead_exchange1";
+    public static final String DEAD_ROUTE_KEY = "dead_route_key1";
 
 
     //队列过期时间
