@@ -2,6 +2,7 @@ package com.workflow.general_backend.service.Impl;
 
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Future;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
@@ -15,6 +16,8 @@ import cn.hutool.log.LogFactory;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Component;
 
 
@@ -35,8 +38,17 @@ public class WebSocketServer {
     /**接收订单oid*/
     private String oid="";
     private static ConcurrentHashMap<String,String> webMessage=new ConcurrentHashMap<>();
-//    private static String getOid="";
-//    private static String getMessage="";
+
+    @Async
+    public Future<Boolean> getStatus(String oid) throws InterruptedException{
+        while (true){
+            synchronized (this){
+                if(webSocketMap.containsKey(oid)){
+                    return new AsyncResult(true);
+                }
+            }
+        }
+    }
 
     /**
      * 连接建立成功调用的方法*/
@@ -144,18 +156,13 @@ public class WebSocketServer {
     public static void sendInfo(String message, @PathParam("oid") String oid) throws IOException {
         log.info("发送消息到:"+oid+"，报文:"+message);
         webMessage.put(oid,message);
-//<<<<<<< Updated upstream
 //        if(StringUtils.isNotBlank(oid)&&webSocketMap.containsKey(oid)){
 //            log.info("订单"+oid+"后端创建消息完成！");
 //            webSocketMap.get(oid).sendMessage("OK");
 //        }else{
 //            log.error("订单"+oid+",不在线！");
 //        }
-//
-//=======
-//        webSocketMap.get(oid).sendMessage("OK");
-//        getOid=oid;
-//        getMessage=message;
+
     }
 
     public static synchronized int getOnlineCount() {

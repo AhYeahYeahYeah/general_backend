@@ -22,6 +22,8 @@ import org.springframework.web.client.RestTemplate;
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import static com.workflow.general_backend.config.MQConfiguration.DEAD_QUEUE;
 import static com.workflow.general_backend.config.MQConfiguration.ORDER_QUEUE;
@@ -65,8 +67,25 @@ public class RMQReceiveService {
         String result = template.postForObject(url, json, String.class);
         System.out.println("resultWorkflowID:-----"+result);
         //通过websocket将workflowid发送到前端
-//        Thread.sleep(2000);
-        WebSocketServer.sendInfo(result,orders.getOid());
+        Boolean linkStatus=null;
+        Future<Boolean> linkResult=null;
+        try {
+            WebSocketServer webSocketServer=new WebSocketServer();
+            linkResult=webSocketServer.getStatus(orders.getOid());
+            linkStatus=linkResult.get(10, TimeUnit.SECONDS);
+            if(linkStatus){
+                WebSocketServer.sendInfo(result,orders.getOid());
+            }else {
+                System.out.println("订单："+orders.getOid()+"连接错误！");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            if(linkResult!=null){
+                linkResult.cancel(true);
+            }
+        }
+
 
     }
 
