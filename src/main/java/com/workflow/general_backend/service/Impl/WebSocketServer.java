@@ -144,7 +144,13 @@ public class WebSocketServer {
     public static void sendInfo(String message, @PathParam("oid") String oid) throws IOException {
         log.info("发送消息到:"+oid+"，报文:"+message);
         webMessage.put(oid,message);
-        webSocketMap.get(oid).sendMessage("OK");
+        if(StringUtils.isNotBlank(oid)&&webSocketMap.containsKey(oid)){
+            log.info("订单"+oid+"后端创建消息完成！");
+            webSocketMap.get(oid).sendMessage("OK");
+        }else{
+            log.error("订单"+oid+",不在线！");
+        }
+
 //        getOid=oid;
 //        getMessage=message;
     }
