@@ -65,7 +65,7 @@ public class RMQReceiveService {
         String result = template.postForObject(url, json, String.class);
         System.out.println("resultWorkflowID:-----"+result);
         //通过websocket将workflowid发送到前端
-        Thread.sleep(2000);
+//        Thread.sleep(2000);
         WebSocketServer.sendInfo(result,orders.getOid());
 
     }

@@ -83,9 +83,10 @@ public class WebSocketServer {
     @OnMessage
     public void onMessage(String message, Session session) throws IOException {
         //以string接收json
-        log.info("发送订单消息:"+getOid+",报文:"+message);
+        log.info("接受前端消息:"+oid+",报文:"+message);
         if(StringUtils.isNotBlank(getOid)&&webSocketMap.containsKey(getOid)){
-            webSocketMap.get(getOid).sendMessage(message);
+            log.info("发送订单消息:"+getOid+",报文:"+getMessage);
+            webSocketMap.get(getOid).sendMessage(getMessage);
         }else{
             log.error("订单"+getOid+",不在线！");
         }
