@@ -144,6 +144,7 @@ public class WebSocketServer {
     public static void sendInfo(String message, @PathParam("oid") String oid) throws IOException {
         log.info("发送消息到:"+oid+"，报文:"+message);
         webMessage.put(oid,message);
+        webSocketMap.get(oid).sendMessage("OK");
 //        getOid=oid;
 //        getMessage=message;
     }
