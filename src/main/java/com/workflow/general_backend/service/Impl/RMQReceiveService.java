@@ -15,6 +15,7 @@ import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.dao.DataAccessException;
+import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -35,6 +36,7 @@ public class RMQReceiveService {
     ProductMapper productMapper;
     @Resource
     WorkflowMapper workflowMapper;
+
     // 监听订单队列
     @RabbitListener(queues = ORDER_QUEUE)
     public void orderQueueListener(Message message, Channel channel) throws IOException, InterruptedException {
@@ -48,15 +50,15 @@ public class RMQReceiveService {
         channel.basicAck(message.getMessageProperties().getDeliveryTag(), true);
 
         //post Conductor
-        OrdersDto orders= rmqBody.getOrdersDto();
+        OrdersDto orders = rmqBody.getOrdersDto();
         RestTemplate template = new RestTemplate();
         // 封装参数，千万不要替换为Map与HashMap，否则参数无法传递
         JSONObject json = new JSONObject();
         json.put("pid", orders.getPid());
         json.put("cid", orders.getCid());
         json.put("oid", orders.getOid());
-        json.put("phoneNum",orders.getPhoneNum());
-        json.put("password",orders.getPassword());
+        json.put("phoneNum", orders.getPhoneNum());
+        json.put("password", orders.getPassword());
         List<Product> product = productMapper.findById(orders.getPid());
         String fid = product.get(0).getFid();
         System.out.println(fid);
@@ -65,25 +67,26 @@ public class RMQReceiveService {
         String url = "http://8.141.159.53:5000/api/workflow/" + name;
         // 1、使用postForObject请求接口
         String result = template.postForObject(url, json, String.class);
-        System.out.println("resultWorkflowID:-----"+result);
+        System.out.println("resultWorkflowID:-----" + result);
         //通过websocket将workflowid发送到前端
-        Boolean linkStatus=null;
-        Future<Boolean> linkResult=null;
-        try {
-            WebSocketServer webSocketServer=new WebSocketServer();
-            linkResult=webSocketServer.getStatus(orders.getOid());
-            linkStatus=linkResult.get(10, TimeUnit.SECONDS);
-            if(linkStatus){
-                WebSocketServer.sendInfo(result,orders.getOid());
-            }else {
-                System.out.println("订单："+orders.getOid()+"连接错误！");
+        boolean status = false;
+        int flag = 0;
+        while (true) {
+            if (flag > 10) {
+                break;
             }
-        }catch (Exception e){
-            e.printStackTrace();
-        }finally {
-            if(linkResult!=null){
-                linkResult.cancel(true);
+            WebSocketServer webSocketServer = new WebSocketServer();
+            if (webSocketServer.getWebSocketMap().containsKey(orders.getOid())) {
+                status = true;
+                break;
             }
+            Thread.sleep(1000);
+            flag++;
+        }
+        if (status) {
+            WebSocketServer.sendInfo(result, orders.getOid());
+        } else {
+            System.out.println("订单：" + orders.getOid() + "连接错误！");
         }
 
 
@@ -98,9 +101,9 @@ public class RMQReceiveService {
         RmqBody rmqBody = objectMapper.readValue(bytes, RmqBody.class);
         System.out.println("路由key= [ " + receivedRoutingKey + " ]接收到的消息= [ " + rmqBody.getOrdersDto().getOid() + "  重传次数：" + rmqBody.getNumber() + " ]");
         System.out.println("-----------------------");
-        Orders orders= rmqBody.getOrdersDto();
+        Orders orders = rmqBody.getOrdersDto();
         //通过websocket将错误发送到前端
-        WebSocketServer.sendInfo("error",orders.getOid());
+        WebSocketServer.sendInfo("error", orders.getOid());
         //Thread.sleep(5000);
         // 发送ack给消息队列，收到消息了
         channel.basicAck(message.getMessageProperties().getDeliveryTag(), true);

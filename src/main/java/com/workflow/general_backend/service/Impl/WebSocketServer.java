@@ -39,17 +39,9 @@ public class WebSocketServer {
     private String oid="";
     private static ConcurrentHashMap<String,String> webMessage=new ConcurrentHashMap<>();
 
-    @Async
-    public Future<Boolean> getStatus(String oid) throws InterruptedException{
-        while (true){
-            synchronized (this){
-                if(webSocketMap.containsKey(oid)){
-                    return new AsyncResult(true);
-                }
-            }
-        }
+    public ConcurrentHashMap<String,WebSocketServer> getWebSocketMap(){
+        return webSocketMap;
     }
-
     /**
      * 连接建立成功调用的方法*/
     @OnOpen
