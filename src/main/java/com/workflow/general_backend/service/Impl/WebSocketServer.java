@@ -37,7 +37,6 @@ public class WebSocketServer {
     private Session session;
     /**接收订单oid*/
     private String oid="";
-    private static ConcurrentHashMap<String,String> webMessage=new ConcurrentHashMap<>();
 
     public ConcurrentHashMap<String,WebSocketServer> getWebSocketMap(){
         return webSocketMap;
@@ -89,18 +88,6 @@ public class WebSocketServer {
     public void onMessage(String message, Session session) throws IOException {
         //以string接收json
         log.info("接受前端订单id"+message);
-        String getOid=message;
-        if(webMessage.containsKey(getOid)){
-            if(StringUtils.isNotBlank(getOid)&&webSocketMap.containsKey(getOid)){
-                String getMessage=webMessage.get(getOid);
-                log.info("发送订单消息:"+getOid+",报文:"+getMessage);
-                webSocketMap.get(getOid).sendMessage(getMessage);
-            }else{
-                log.error("订单"+getOid+",不在线！");
-            }
-        }else{
-            log.error("订单"+getOid+",不在线！");
-        }
 
         //可以群发消息
         //消息保存到数据库、redis
@@ -147,13 +134,13 @@ public class WebSocketServer {
      * */
     public static void sendInfo(String message, @PathParam("oid") String oid) throws IOException {
         log.info("发送消息到:"+oid+"，报文:"+message);
-        webMessage.put(oid,message);
-//        if(StringUtils.isNotBlank(oid)&&webSocketMap.containsKey(oid)){
-//            log.info("订单"+oid+"后端创建消息完成！");
-//            webSocketMap.get(oid).sendMessage("OK");
-//        }else{
-//            log.error("订单"+oid+",不在线！");
-//        }
+
+        if(StringUtils.isNotBlank(oid)&&webSocketMap.containsKey(oid)){
+            log.info("订单"+oid+"后端创建消息完成！");
+            webSocketMap.get(oid).sendMessage(message);
+        }else{
+            log.error("订单"+oid+",不在线！");
+        }
 
     }
 
