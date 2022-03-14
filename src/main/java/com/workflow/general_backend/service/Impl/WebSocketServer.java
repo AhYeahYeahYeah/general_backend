@@ -34,8 +34,9 @@ public class WebSocketServer {
     private Session session;
     /**接收订单oid*/
     private String oid="";
-    private static String getOid="";
-    private static String getMessage="";
+    private static ConcurrentHashMap<String,String> webMessage=new ConcurrentHashMap<>();
+//    private static String getOid="";
+//    private static String getMessage="";
 
     /**
      * 连接建立成功调用的方法*/
@@ -83,13 +84,20 @@ public class WebSocketServer {
     @OnMessage
     public void onMessage(String message, Session session) throws IOException {
         //以string接收json
-        log.info("接受前端消息:"+oid+",报文:"+message);
-        if(StringUtils.isNotBlank(getOid)&&webSocketMap.containsKey(getOid)){
-            log.info("发送订单消息:"+getOid+",报文:"+getMessage);
-            webSocketMap.get(getOid).sendMessage(getMessage);
+        log.info("接受前端订单id"+message);
+        String getOid=message;
+        if(webMessage.containsKey(getOid)){
+            if(StringUtils.isNotBlank(getOid)&&webSocketMap.containsKey(getOid)){
+                String getMessage=webMessage.get(getOid);
+                log.info("发送订单消息:"+getOid+",报文:"+getMessage);
+                webSocketMap.get(getOid).sendMessage(getMessage);
+            }else{
+                log.error("订单"+getOid+",不在线！");
+            }
         }else{
             log.error("订单"+getOid+",不在线！");
         }
+
         //可以群发消息
         //消息保存到数据库、redis
 //        if(StringUtils.isNotBlank(message)){
@@ -135,8 +143,9 @@ public class WebSocketServer {
      * */
     public static void sendInfo(String message, @PathParam("oid") String oid) throws IOException {
         log.info("发送消息到:"+oid+"，报文:"+message);
-        getOid=oid;
-        getMessage=message;
+        webMessage.put(oid,message);
+//        getOid=oid;
+//        getMessage=message;
     }
 
     public static synchronized int getOnlineCount() {
