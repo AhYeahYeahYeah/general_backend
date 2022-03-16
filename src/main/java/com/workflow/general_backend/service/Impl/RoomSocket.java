@@ -194,9 +194,9 @@ public class RoomSocket {
                         String roomid = room.getString("id");
                         if (roomsHashMap.containsKey(roomid)) {
                             roomsHashMap.get(roomid).getAccountList().remove(account);
-                            if(roomsHashMap.get(roomid).getAccountList().isEmpty()){
-                                roomsHashMap.remove(roomid);
-                            }
+//                            if(roomsHashMap.get(roomid).getAccountList().isEmpty()){
+//                                roomsHashMap.remove(roomid);
+//                            }
                             log.info("account " + account + " quit success");
                             response.put("result", "Success");
                             response.put("msg", "");
@@ -223,6 +223,32 @@ public class RoomSocket {
                             }
                         }
 
+                        break;
+                    }
+                    case "V1/Room/Delete": {
+                        JSONObject response = new JSONObject();
+                        response.put("path", "V1/Room/Delete");
+                        JSONObject room = data.getJSONObject("room");
+                        String roomid = room.getString("id");
+                        String password = room.getString("password");
+                        if(!roomsHashMap.containsKey(roomid)){
+                            response.put("result", "Failed");
+                            response.put("msg", "Delete Error: id not found");
+                        }else {
+                            if (password.equals(roomsHashMap.get(roomid).getPassword())) {
+
+                                roomsHashMap.remove(roomid);
+
+                                log.info("account " + account + " delete success");
+                                response.put("result", "Success");
+                                response.put("msg", "");
+                            } else {
+                                response.put("result", "Failed");
+                                response.put("msg", "Delete Error: password incorrect");
+                            }
+                        }
+                        this.currentRoomId = "";
+                        sendInfo(response.toString(), account);
                         break;
                     }
                     default: {
