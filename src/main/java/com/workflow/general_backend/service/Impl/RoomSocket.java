@@ -228,8 +228,16 @@ public class RoomSocket {
                         if (roomsHashMap.containsKey(id)) {
                             Room aRoom = roomsHashMap.get(id);
                             List<String> list = aRoom.getAccountList();
+                            json.put("path", "V1/Room/Edit");
+                            JSONObject da=new JSONObject();
+                            JSONObject oneroom=new JSONObject();
+                            oneroom.put("id",id);
                             for (String i : list) {
-                                sendInfo(jsonObject.toString(), i);
+                                da.put("account",i);
+                                da.put("flow",flow);
+                                json.put("data",da);
+                                json.put("room",oneroom);
+                                sendInfo(json.toString(), i);
                             }
                         }
 
