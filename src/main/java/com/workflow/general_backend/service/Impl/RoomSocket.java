@@ -4,6 +4,7 @@ package com.workflow.general_backend.service.Impl;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.workflow.general_backend.entity.Room;
 import com.workflow.general_backend.utils.JwtUtils;
@@ -221,7 +222,7 @@ public class RoomSocket {
                         JSONObject room = data.getJSONObject("room");
                         String id = room.getString("id");
                         String timeStamp = data.getString("timeStamp");
-                        JSONObject flow = data.getJSONObject("flow");
+                        JSONArray flow = data.getJSONArray("flow");
                         JSONObject json = new JSONObject();
                         roomsHashMap.get("id").setFlow(flow.toString());
                         if (roomsHashMap.containsKey(id)) {
