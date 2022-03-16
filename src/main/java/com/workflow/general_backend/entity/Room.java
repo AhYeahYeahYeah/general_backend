@@ -9,6 +9,7 @@ public class Room {
     String name;
     String password;
     List<String> accountList;
+    String flow;
 
     public String getSid() {
         return sid;
@@ -40,5 +41,13 @@ public class Room {
 
     public void setAccountList(List<String> accountList) {
         this.accountList = accountList;
+    }
+
+    public String getFlow() {
+        return flow;
+    }
+
+    public void setFlow(String flow) {
+        this.flow = flow;
     }
 }

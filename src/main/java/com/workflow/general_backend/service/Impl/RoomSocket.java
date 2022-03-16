@@ -146,7 +146,7 @@ public class RoomSocket {
                     }
                     case "V1/Room/Join": {
                         JSONObject room = data.getJSONObject("room");
-                        Room aRoom = new Room();
+                        Room aRoom;
                         String id = room.getString("id");
                         JSONObject json = new JSONObject();
                         if (roomConcurrentHashMap.containsKey(id)) {
@@ -156,7 +156,7 @@ public class RoomSocket {
                                 log.info("account " + account + " join accept");
                                 json.put("path", "V1/Room/Join");
                                 json.put("result", "Success");
-                                json.put("msg", "");
+                                json.put("msg", aRoom.getFlow());
 
                             } else {
                                 json.put("path", "V1/Room/Join");
@@ -189,6 +189,7 @@ public class RoomSocket {
                         String timeStamp = data.getString("timeStamp");
                         JSONObject flow = data.getJSONObject("flow");
                         JSONObject json = new JSONObject();
+                        roomConcurrentHashMap.get("id").setFlow(flow.toString());
                         if(roomConcurrentHashMap.containsKey(id)){
                             Room aRoom=roomConcurrentHashMap.get(id);
                             List<String> list = aRoom.getAccountList();
