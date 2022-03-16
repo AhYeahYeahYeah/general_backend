@@ -224,7 +224,7 @@ public class RoomSocket {
                         String timeStamp = data.getString("timeStamp");
                         JSONArray flow = data.getJSONArray("flow");
                         JSONObject json = new JSONObject();
-                        roomsHashMap.get("id").setFlow(flow.toString());
+                        roomsHashMap.get(id).setFlow(flow.toString());
                         if (roomsHashMap.containsKey(id)) {
                             Room aRoom = roomsHashMap.get(id);
                             List<String> list = aRoom.getAccountList();
