@@ -33,7 +33,7 @@ public class RoomSocket {
     /**
      * concurrent包的线程安全Set，用来存放每个客户端对应的MyWebSocket对象。
      */
-    private static ConcurrentHashMap<String, RoomSocket> roomSocketMap = new ConcurrentHashMap<>();
+    private static ConcurrentHashMap<String, RoomSocket> clientsHashMap = new ConcurrentHashMap<>();
     /**
      * 与某个客户端的连接会话，需要通过它来给客户端发送数据
      */
@@ -42,15 +42,17 @@ public class RoomSocket {
      * 接收用户account
      */
     private String account = "";
+    //保存用户当前所在房间id
+    private String currentRoomId = "";
 
-    private static ConcurrentHashMap<String, Room> roomConcurrentHashMap = new ConcurrentHashMap<>();
+    private static ConcurrentHashMap<String, Room> roomsHashMap = new ConcurrentHashMap<>();
 
     public static ConcurrentHashMap<String, Room> getRoomConcurrentHashMap() {
-        return roomConcurrentHashMap;
+        return roomsHashMap;
     }
 
     public ConcurrentHashMap<String, RoomSocket> getWebSocketMap() {
-        return roomSocketMap;
+        return clientsHashMap;
     }
 
     /**
@@ -60,12 +62,12 @@ public class RoomSocket {
     public void onOpen(Session session, @PathParam("account") String account) {
         this.session = session;
         this.account = account;
-        if (roomSocketMap.containsKey(account)) {
-            roomSocketMap.remove(account);
-            roomSocketMap.put(account, this);
+        if (clientsHashMap.containsKey(account)) {
+            clientsHashMap.remove(account);
+            clientsHashMap.put(account, this);
             //加入set中
         } else {
-            roomSocketMap.put(account, this);
+            clientsHashMap.put(account, this);
             //加入set中
             addOnlineCount();
             //在线数加1
@@ -85,8 +87,8 @@ public class RoomSocket {
      */
     @OnClose
     public void onClose() {
-        if (roomSocketMap.containsKey(account)) {
-            roomSocketMap.remove(account);
+        if (clientsHashMap.containsKey(account)) {
+            clientsHashMap.remove(account);
             //从set中删除
             subOnlineCount();
         }
@@ -141,16 +143,18 @@ public class RoomSocket {
                         aRoom.setSid(room.getString("id"));
                         aRoom.setName(room.getString("name"));
                         aRoom.setPassword(room.getString("password"));
-                        roomConcurrentHashMap.put(room.getString("id"), aRoom);
+                        roomsHashMap.put(room.getString("id"), aRoom);
+                        this.currentRoomId = room.getString("id");
                         break;
                     }
                     case "V1/Room/Join": {
                         JSONObject room = data.getJSONObject("room");
                         Room aRoom;
                         String id = room.getString("id");
+                        this.currentRoomId = id;
                         JSONObject json = new JSONObject();
-                        if (roomConcurrentHashMap.containsKey(id)) {
-                            aRoom = roomConcurrentHashMap.get(id);
+                        if (roomsHashMap.containsKey(id)) {
+                            aRoom = roomsHashMap.get(id);
                             if (aRoom.getPassword().equals(room.getString("password"))) {
                                 aRoom.getAccountList().add(account);
                                 log.info("account " + account + " join accept");
@@ -175,12 +179,33 @@ public class RoomSocket {
                     }
                     case "V1/Room/Query": {
                         JSONObject response = new JSONObject();
-                        response.put("path","V1/Room/Query");
-                        List<Room> rooms=QueryRooms();
-                        JSONObject roomJsonObject=new JSONObject();
-                        roomJsonObject.put("rooms",rooms);
-                        response.put("data",roomJsonObject);
-                        sendInfo(response.toString(),account);
+                        response.put("path", "V1/Room/Query");
+                        List<Room> rooms = QueryRooms();
+                        JSONObject roomJsonObject = new JSONObject();
+                        roomJsonObject.put("rooms", rooms);
+                        response.put("data", roomJsonObject);
+                        sendInfo(response.toString(), account);
+                        break;
+                    }
+                    case "V1/Room/Quit": {
+                        JSONObject response = new JSONObject();
+                        response.put("path", "V1/Room/Quit");
+                        JSONObject room = data.getJSONObject("room");
+                        String roomid = room.getString("id");
+                        if (roomsHashMap.containsKey(roomid)) {
+                            roomsHashMap.get(roomid).getAccountList().remove(account);
+                            if(roomsHashMap.get(roomid).getAccountList().isEmpty()){
+                                roomsHashMap.remove(roomid);
+                            }
+                            log.info("account " + account + " quit success");
+                            response.put("result", "Success");
+                            response.put("msg", "");
+                        } else {
+                            response.put("result", "Failed");
+                            response.put("msg", "Quit Error");
+                        }
+                        this.currentRoomId = "";
+                        sendInfo(response.toString(), account);
                         break;
                     }
                     case "V1/Data/Edit": {
@@ -189,13 +214,12 @@ public class RoomSocket {
                         String timeStamp = data.getString("timeStamp");
                         JSONObject flow = data.getJSONObject("flow");
                         JSONObject json = new JSONObject();
-                        roomConcurrentHashMap.get("id").setFlow(flow.toString());
-                        if(roomConcurrentHashMap.containsKey(id)){
-                            Room aRoom=roomConcurrentHashMap.get(id);
+                        roomsHashMap.get("id").setFlow(flow.toString());
+                        if (roomsHashMap.containsKey(id)) {
+                            Room aRoom = roomsHashMap.get(id);
                             List<String> list = aRoom.getAccountList();
-                            for (String i:list
-                                 ) {
-                                sendInfo(jsonObject.toString(),i);
+                            for (String i : list) {
+                                sendInfo(jsonObject.toString(), i);
                             }
                         }
 
@@ -231,9 +255,9 @@ public class RoomSocket {
     }
 
     //查询所有房间
-    public List<Room> QueryRooms(){
+    public List<Room> QueryRooms() {
         List<Room> rooms = new ArrayList<>();
-        for(Map.Entry<String,Room> entry:roomConcurrentHashMap.entrySet()){
+        for (Map.Entry<String, Room> entry : roomsHashMap.entrySet()) {
             Room room = new Room();
             room.setSid(entry.getValue().getSid());
             room.setName(entry.getValue().getName());
@@ -248,9 +272,9 @@ public class RoomSocket {
     public static void sendInfo(String message, @PathParam("account") String account) throws IOException {
         log.info("用户端:" + account + "，报文:" + message);
 
-        if (StringUtils.isNotBlank(account) && roomSocketMap.containsKey(account)) {
+        if (StringUtils.isNotBlank(account) && clientsHashMap.containsKey(account)) {
             log.info("用户端" + account + "后端创建消息完成！");
-            roomSocketMap.get(account).sendMessage(message);
+            clientsHashMap.get(account).sendMessage(message);
         } else {
             log.error("用户端" + account + ",不在线！");
         }
