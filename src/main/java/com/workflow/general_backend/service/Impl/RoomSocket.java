@@ -19,12 +19,13 @@ import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @ServerEndpoint("/roomsocket/{account}")
 @Component
 public class RoomSocket {
-    static Log log = LogFactory.get(WebSocketServer.class);
+    static Log log = LogFactory.get(RoomSocket.class);
     /**
      * 静态变量，用来记录当前在线连接数。应该把它设计成线程安全的。
      */
@@ -169,16 +170,33 @@ public class RoomSocket {
                             json.put("msg", "Wrong RoomId");
 
                         }
-                        sendInfo(String.valueOf(json), account);
+                        sendInfo(json.toString(), account);
                         break;
                     }
                     case "V1/Room/Query": {
-
-
+                        JSONObject response = new JSONObject();
+                        response.put("path","V1/Room/Query");
+                        List<Room> rooms=QueryRooms();
+                        JSONObject roomJsonObject=new JSONObject();
+                        roomJsonObject.put("rooms",rooms);
+                        response.put("data",roomJsonObject);
+                        sendInfo(response.toString(),account);
                         break;
                     }
                     case "V1/Data/Edit": {
-
+                        JSONObject room = data.getJSONObject("room");
+                        String id = room.getString("id");
+                        String timeStamp = data.getString("timeStamp");
+                        JSONObject flow = data.getJSONObject("flow");
+                        JSONObject json = new JSONObject();
+                        if(roomConcurrentHashMap.containsKey(id)){
+                            Room aRoom=roomConcurrentHashMap.get(id);
+                            List<String> list = aRoom.getAccountList();
+                            for (String i:list
+                                 ) {
+                                sendInfo(jsonObject.toString(),i);
+                            }
+                        }
 
                         break;
                     }
@@ -186,7 +204,7 @@ public class RoomSocket {
                         log.info("unknown path");
                     }
                 }
-                
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -211,6 +229,17 @@ public class RoomSocket {
         this.session.getBasicRemote().sendText(message);
     }
 
+    //查询所有房间
+    public List<Room> QueryRooms(){
+        List<Room> rooms = new ArrayList<>();
+        for(Map.Entry<String,Room> entry:roomConcurrentHashMap.entrySet()){
+            Room room = new Room();
+            room.setSid(entry.getValue().getSid());
+            room.setName(entry.getValue().getName());
+            rooms.add(room);
+        }
+        return rooms;
+    }
 
     /**
      * 发送自定义消息
