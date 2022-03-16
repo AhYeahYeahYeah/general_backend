@@ -164,7 +164,9 @@ public class RoomSocket {
                                 log.info("account " + account + " join accept");
                                 json.put("path", "V1/Room/Join");
                                 json.put("result", "Success");
-                                json.put("msg", aRoom.getFlow());
+                                json.put("msg","");
+                                if(aRoom.getFlow()!=null)
+                                    json.put("msg", aRoom.getFlow());
 
                             } else {
                                 json.put("path", "V1/Room/Join");
