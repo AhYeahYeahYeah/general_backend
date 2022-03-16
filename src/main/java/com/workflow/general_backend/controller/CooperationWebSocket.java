@@ -1,6 +1,10 @@
-package com.workflow.general_backend.service.Impl;
+package com.workflow.general_backend.controller;
+
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
@@ -14,6 +18,7 @@ import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.workflow.general_backend.entity.Room;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
@@ -23,46 +28,45 @@ import org.springframework.stereotype.Component;
 /**
  * @author zhengkai.blog.csdn.net
  */
-@ServerEndpoint("/websocket/{oid}")
+@ServerEndpoint("/roomsocket/{account}")
 @Component
-public class WebSocketServer {
+public class CooperationWebSocket {
 
-    static Log log= LogFactory.get(WebSocketServer.class);
+    static Log log= LogFactory.get(CooperationWebSocket.class);
     /**静态变量，用来记录当前在线连接数。应该把它设计成线程安全的。*/
     private static int onlineCount = 0;
     /**concurrent包的线程安全Set，用来存放每个客户端对应的MyWebSocket对象。*/
-    private static ConcurrentHashMap<String,WebSocketServer> webSocketMap = new ConcurrentHashMap<>();
+    private static ConcurrentHashMap<String, CooperationWebSocket> webSocketMap = new ConcurrentHashMap<>();
     /**与某个客户端的连接会话，需要通过它来给客户端发送数据*/
     private Session session;
-    /**接收订单oid*/
-    private String oid="";
+    /**接收用户account*/
+    private String account="";
+    //保存房间中的信息
+    private ConcurrentHashMap<String,Room> roomConcurrentHashMap = new ConcurrentHashMap<>();
 
-    public ConcurrentHashMap<String,WebSocketServer> getWebSocketMap(){
-        return webSocketMap;
-    }
     /**
      * 连接建立成功调用的方法*/
     @OnOpen
-    public void onOpen(Session session,@PathParam("oid") String oid) {
+    public void onOpen(Session session,@PathParam("account") String account) {
         this.session = session;
-        this.oid=oid;
-        if(webSocketMap.containsKey(oid)){
-            webSocketMap.remove(oid);
-            webSocketMap.put(oid,this);
+        this.account=account;
+        if(webSocketMap.containsKey(account)){
+            webSocketMap.remove(account);
+            webSocketMap.put(account,this);
             //加入set中
         }else{
-            webSocketMap.put(oid,this);
+            webSocketMap.put(account,this);
             //加入set中
             addOnlineCount();
             //在线数加1
         }
 
-        log.info("订单连接:"+oid+",当前在线人数为:" + getOnlineCount());
+        log.info("用户连接:"+account+",当前在线人数为:" + getOnlineCount());
 
         try {
             sendMessage("连接成功");
         } catch (IOException e) {
-            log.error("订单:"+oid+",网络异常!!!!!!");
+            log.error("用户:"+account+",网络异常!!!!!!");
         }
     }
 
@@ -71,12 +75,24 @@ public class WebSocketServer {
      */
     @OnClose
     public void onClose() {
-        if(webSocketMap.containsKey(oid)){
-            webSocketMap.remove(oid);
+        if(webSocketMap.containsKey(account)){
+            webSocketMap.remove(account);
             //从set中删除
             subOnlineCount();
         }
-        log.info("用户退出:"+oid+",当前在线人数为:" + getOnlineCount());
+        log.info("用户退出:"+account+",当前在线人数为:" + getOnlineCount());
+    }
+
+    //查询所有房间
+    public List<Room> QueryRooms(){
+        List<Room> rooms = new ArrayList<>();
+        for(Map.Entry<String,Room> entry:roomConcurrentHashMap.entrySet()){
+            Room room = new Room();
+            room.setSid(entry.getValue().getSid());
+            room.setName(entry.getValue().getName());
+            rooms.add(room);
+        }
+        return rooms;
     }
 
     /**
@@ -86,8 +102,29 @@ public class WebSocketServer {
     @OnMessage
     public void onMessage(String message, Session session) throws IOException {
         //以string接收json
-        log.info("接受前端订单id"+message);
+        log.info("前端信息："+message);
+        //解析发送的报文
+        JSONObject jsonObject = JSON.parseObject(message);
+        //追加发送人(防止串改)
+//                jsonObject.put("fromOid", this.account);
+        String path = jsonObject.getString("path");
+        JSONObject data = jsonObject.getJSONObject("data");
+        String account = data.getString("account");
+        String token = data.getString("token");
+        switch (path){
+            case "V1/Room/Query":
+                JSONObject response = new JSONObject();
+                response.put("path","V1/Room/Query");
+                List<Room> rooms=QueryRooms();
+                JSONObject roomJsonObject=new JSONObject();
+                roomJsonObject.put("rooms",rooms);
+                response.put("data",roomJsonObject);
+                sendInfo(response.toString(),account);
+                break;
+            case "V1/Data/Edit":
 
+                break;
+        }
         //可以群发消息
         //消息保存到数据库、redis
 //        if(StringUtils.isNotBlank(message)){
@@ -117,7 +154,7 @@ public class WebSocketServer {
      */
     @OnError
     public void onError(Session session, Throwable error) {
-        log.error("订单错误:"+this.oid+",原因:"+error.getMessage());
+        log.error("用户错误:"+this.account+",原因:"+error.getMessage());
         error.printStackTrace();
     }
     /**
@@ -131,14 +168,14 @@ public class WebSocketServer {
     /**
      * 发送自定义消息
      * */
-    public static void sendInfo(String message, @PathParam("oid") String oid) throws IOException {
-        log.info("发送消息到:"+oid+"，报文:"+message);
+    public static void sendInfo(String message, @PathParam("account") String account) throws IOException {
+        log.info("发送消息到:"+account+"，报文:"+message);
 
-        if(StringUtils.isNotBlank(oid)&&webSocketMap.containsKey(oid)){
-            log.info("订单"+oid+"后端创建消息完成！");
-            webSocketMap.get(oid).sendMessage(message);
+        if(StringUtils.isNotBlank(account)&&webSocketMap.containsKey(account)){
+            log.info("用户"+account+"后端创建消息完成！");
+            webSocketMap.get(account).sendMessage(message);
         }else{
-            log.error("订单"+oid+",不在线！");
+            log.error("用户"+account+",不在线！");
         }
 
     }
@@ -148,11 +185,12 @@ public class WebSocketServer {
     }
 
     public static synchronized void addOnlineCount() {
-        WebSocketServer.onlineCount++;
+        onlineCount++;
     }
 
     public static synchronized void subOnlineCount() {
-        WebSocketServer.onlineCount--;
+        onlineCount--;
     }
 }
+
 

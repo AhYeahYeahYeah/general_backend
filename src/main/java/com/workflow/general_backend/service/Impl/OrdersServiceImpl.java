@@ -95,16 +95,11 @@ public class OrdersServiceImpl implements OrdersService {
                     commonResult.setStatus("Failed");
                     commonResult.setMsg(response);
                 }
-
-
-
             } catch (Exception e) {
                 e.printStackTrace();
                 commonResult.setStatus("Failed");
                 commonResult.setMsg(e.toString());
             }
-
-
             return commonResult;
         }catch (DataAccessException e){
             commonResult.setStatus("Failed");
