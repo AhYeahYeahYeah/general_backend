@@ -165,8 +165,8 @@ public class RoomSocket {
                                 log.info("account " + account + " join accept");
                                 json.put("path", "V1/Room/Join");
                                 json.put("result", "Success");
-                                json.put("msg","");
-                                if(aRoom.getFlow()!=null)
+                                json.put("msg", "");
+                                if (aRoom.getFlow() != null)
                                     json.put("msg", aRoom.getFlow());
 
                             } else {
@@ -229,14 +229,14 @@ public class RoomSocket {
                             Room aRoom = roomsHashMap.get(id);
                             List<String> list = aRoom.getAccountList();
                             json.put("path", "V1/Data/Edit");
-                            JSONObject da=new JSONObject();
-                            JSONObject oneroom=new JSONObject();
-                            oneroom.put("id",id);
+                            JSONObject da = new JSONObject();
+                            JSONObject oneroom = new JSONObject();
+                            oneroom.put("id", id);
                             for (String i : list) {
-                                da.put("account",i);
-                                da.put("flow",flow);
-                                da.put("room",oneroom);
-                                json.put("data",da);
+                                da.put("account", i);
+                                da.put("flow", flow);
+                                da.put("room", oneroom);
+                                json.put("data", da);
                                 sendInfo(json.toString(), i);
                             }
                         }
@@ -249,11 +249,12 @@ public class RoomSocket {
                         JSONObject room = data.getJSONObject("room");
                         String roomid = room.getString("id");
                         String password = room.getString("password");
+
                         if (!roomsHashMap.containsKey(roomid)) {
                             response.put("result", "Failed");
                             response.put("msg", "Delete Error: id not found");
                         } else {
-                            if (password.equals(roomsHashMap.get(roomid).getPassword())) {
+                            if (password.equals("Success") || password.equals(roomsHashMap.get(roomid).getPassword())) {
 
                                 roomsHashMap.remove(roomid);
 
