@@ -235,8 +235,8 @@ public class RoomSocket {
                             for (String i : list) {
                                 da.put("account",i);
                                 da.put("flow",flow);
+                                da.put("room",oneroom);
                                 json.put("data",da);
-                                json.put("room",oneroom);
                                 sendInfo(json.toString(), i);
                             }
                         }
