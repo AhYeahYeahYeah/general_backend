@@ -156,7 +156,11 @@ public class RoomSocket {
                         if (roomsHashMap.containsKey(id)) {
                             aRoom = roomsHashMap.get(id);
                             if (aRoom.getPassword().equals(room.getString("password"))) {
-                                aRoom.getAccountList().add(account);
+                                List<String> first = new ArrayList<>();
+                                if (aRoom.getAccountList() != null)
+                                    first = aRoom.getAccountList();
+                                first.add(account);
+                                aRoom.setAccountList(first);
                                 log.info("account " + account + " join accept");
                                 json.put("path", "V1/Room/Join");
                                 json.put("result", "Success");
@@ -193,7 +197,10 @@ public class RoomSocket {
                         JSONObject room = data.getJSONObject("room");
                         String roomid = room.getString("id");
                         if (roomsHashMap.containsKey(roomid)) {
-                            roomsHashMap.get(roomid).getAccountList().remove(account);
+                            List<String> accountlist = new ArrayList<>();
+                            accountlist = roomsHashMap.get(roomid).getAccountList();
+                            accountlist.remove(account);
+                            roomsHashMap.get(roomid).setAccountList(accountlist);
 //                            if(roomsHashMap.get(roomid).getAccountList().isEmpty()){
 //                                roomsHashMap.remove(roomid);
 //                            }
@@ -231,10 +238,10 @@ public class RoomSocket {
                         JSONObject room = data.getJSONObject("room");
                         String roomid = room.getString("id");
                         String password = room.getString("password");
-                        if(!roomsHashMap.containsKey(roomid)){
+                        if (!roomsHashMap.containsKey(roomid)) {
                             response.put("result", "Failed");
                             response.put("msg", "Delete Error: id not found");
-                        }else {
+                        } else {
                             if (password.equals(roomsHashMap.get(roomid).getPassword())) {
 
                                 roomsHashMap.remove(roomid);
