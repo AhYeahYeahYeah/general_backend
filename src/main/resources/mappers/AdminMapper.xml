@@ -15,7 +15,7 @@
             <if test="aname != null and aname != ''">aname=#{aname},</if>
             <if test="nickName != null and nickName != ''">nick_name=#{nickName},</if>
             <if test="avatar != null and avatar != ''">avatar=#{avatar},</if>
-            <if test="permissions != null and permission !=''">permissions=#{permissions},</if>
+            <if test="permissions != null and permissions !=''">permissions=#{permissions},</if>
         </set>
         where aid = #{aid}
     </update>
