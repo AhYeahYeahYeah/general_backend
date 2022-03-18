@@ -166,6 +166,7 @@ public class RoomSocket {
                                 json.put("path", "V1/Room/Join");
                                 json.put("result", "Success");
                                 json.put("msg", "");
+                                json.put("accountList", first.toString());
                                 if (aRoom.getFlow() != null)
                                     json.put("msg", aRoom.getFlow());
 
@@ -173,15 +174,21 @@ public class RoomSocket {
                                 json.put("path", "V1/Room/Join");
                                 json.put("result", "Failed");
                                 json.put("msg", "Wrong password");
+                                json.put("accountList", "");
                             }
 
                         } else {
                             json.put("path", "V1/Room/Join");
                             json.put("result", "Failed");
                             json.put("msg", "Wrong RoomId");
+                            json.put("accountList", "");
 
                         }
-                        sendInfo(json.toString(), account);
+                        List<String> list = roomsHashMap.get(id).getAccountList();
+                        for (String i : list) {
+                            sendInfo(json.toString(), i);
+                        }
+//                        sendInfo(json.toString(), account);
                         break;
                     }
                     case "V1/Room/Query": {
