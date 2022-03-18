@@ -186,6 +186,7 @@ public class RoomSocket {
                         }
                         List<String> list = roomsHashMap.get(id).getAccountList();
                         for (String i : list) {
+                            json.put("account",i);
                             sendInfo(json.toString(), i);
                         }
 //                        sendInfo(json.toString(), account);
@@ -217,12 +218,19 @@ public class RoomSocket {
                             log.info("account " + account + " quit success");
                             response.put("result", "Success");
                             response.put("msg", "");
+                            response.put("accountList",accountlist.toString());
                         } else {
                             response.put("result", "Failed");
                             response.put("msg", "Quit Error");
+                            response.put("accountList","");
                         }
                         this.currentRoomId = "";
-                        sendInfo(response.toString(), account);
+                        List<String> list = roomsHashMap.get(roomid).getAccountList();
+                        for (String i : list) {
+                            response.put("account",i);
+                            sendInfo(response.toString(), i);
+                        }
+//                        sendInfo(response.toString(), account);
                         break;
                     }
                     case "V1/Data/Edit": {
