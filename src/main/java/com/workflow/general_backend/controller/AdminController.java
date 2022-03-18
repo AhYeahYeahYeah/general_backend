@@ -25,6 +25,11 @@ public class AdminController {
         return adminService.findById(aid);
     }
 
+    @GetMapping("/findByAccount/{account}")
+    public Admin findByAccount(@PathVariable("account") String account) {
+        return adminService.findByAccount(account);
+    }
+
     @PostMapping
     public CommonResult insert(@RequestBody Admin admin) {
         return adminService.insert(admin);

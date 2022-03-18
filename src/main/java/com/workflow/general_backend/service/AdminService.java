@@ -18,6 +18,8 @@ public interface AdminService {
 
     List<Admin> findById(String aid);
 
+    Admin findByAccount(String account);
+
     CommonResult insert(Admin admin);
 
     CommonResult update(Admin admin);

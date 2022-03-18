@@ -94,6 +94,11 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
+    public Admin findByAccount(String account) {
+        return adminMapper.findAdminByAccount(account);
+    }
+
+    @Override
     public CommonResult insert(Admin admin) {
         CommonResult commonResult = new CommonResult();
         String uuid = UUID.randomUUID().toString();
