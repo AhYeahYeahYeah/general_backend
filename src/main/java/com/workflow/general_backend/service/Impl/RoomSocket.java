@@ -87,12 +87,16 @@ public class RoomSocket {
      * 连接关闭调用的方法
      */
     @OnClose
-    public void onClose() {
+    public void onClose() throws IOException {
         if (clientsHashMap.containsKey(account)) {
             clientsHashMap.remove(account);
             //从set中删除
             subOnlineCount();
         }
+        JSONObject response = new JSONObject();
+        response.put("path", "V1/Room/Quit");
+        response.put("accountList","");
+        List<String> list=new ArrayList<>();
         int flag=0;
         for (String i:roomsHashMap.keySet()
              ) {
@@ -101,6 +105,7 @@ public class RoomSocket {
             for(int j=0;j<accountList.size();j++){
                 if(accountList.get(j).equals(account)){
                     accountList.remove(j);
+                    list=accountList;
                     flag=1;
                     break;
                 }
@@ -108,6 +113,13 @@ public class RoomSocket {
             if(flag==1)
                 break;
         }
+        response.put("accountList",list);
+        for (String i:list
+             ) {
+            response.put("account",i);
+            sendInfo(response.toString(),i);
+        }
+
         log.info("用户端退出:" + account + ",当前在线用户端数为:" + getOnlineCount());
     }
 
