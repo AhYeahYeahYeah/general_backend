@@ -113,7 +113,7 @@ public class RoomSocket {
             if(flag==1)
                 break;
         }
-        response.put("accountList",list);
+        response.put("accountList",list.toString().replace(" ",""));
         for (String i:list
              ) {
             response.put("account",i);
