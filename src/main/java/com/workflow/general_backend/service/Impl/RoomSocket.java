@@ -93,21 +93,21 @@ public class RoomSocket {
             //从set中删除
             subOnlineCount();
         }
-//        int flag=0;
-//        for (String i:roomsHashMap.keySet()
-//             ) {
-//            Room aRoom = roomsHashMap.get(i);
-//            List<String> accountList=aRoom.getAccountList();
-//            for(int j=0;j<accountList.size();j++){
-//                if(accountList.get(j).equals(account)){
-//                    accountList.remove(j);
-//                    flag=1;
-//                    break;
-//                }
-//            }
-//            if(flag==1)
-//                break;
-//        }
+        int flag=0;
+        for (String i:roomsHashMap.keySet()
+             ) {
+            Room aRoom = roomsHashMap.get(i);
+            List<String> accountList=aRoom.getAccountList();
+            for(int j=0;j<accountList.size();j++){
+                if(accountList.get(j).equals(account)){
+                    accountList.remove(j);
+                    flag=1;
+                    break;
+                }
+            }
+            if(flag==1)
+                break;
+        }
         log.info("用户端退出:" + account + ",当前在线用户端数为:" + getOnlineCount());
     }
 
