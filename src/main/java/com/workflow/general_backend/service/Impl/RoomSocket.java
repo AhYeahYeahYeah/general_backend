@@ -181,7 +181,7 @@ public class RoomSocket {
                                 json.put("path", "V1/Room/Join");
                                 json.put("result", "Success");
                                 json.put("msg", "");
-                                json.put("accountList", first.toString());
+                                json.put("accountList", first.toString().replace(" ",""));
                                 if (aRoom.getFlow() != null)
                                     json.put("msg", aRoom.getFlow());
 
@@ -233,7 +233,7 @@ public class RoomSocket {
                             log.info("account " + account + " quit success");
                             response.put("result", "Success");
                             response.put("msg", "");
-                            response.put("accountList",accountlist.toString());
+                            response.put("accountList",accountlist.toString().replace(" ",""));
                         } else {
                             response.put("result", "Failed");
                             response.put("msg", "Quit Error");
