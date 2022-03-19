@@ -23,6 +23,11 @@ public class WorkflowController {
         return workflowService.findAll();
     }
 
+    @GetMapping("/dashboard")
+    public List<Workflow> findAllForDash() {
+        return workflowService.findAll();
+    }
+
     @GetMapping("/{fid}")
     public List<Workflow> findById(@PathVariable("fid") String fid) {
         return workflowService.findById(fid);
