@@ -24,6 +24,9 @@ public class OrdersController {
     @GetMapping("/dashboard")
     public List<Orders> findAllForDash(){return ordersService.findAll();}
 
+    @GetMapping("/dashboard/recent")
+    public List<Orders> findRecent(){return ordersService.findRecent();}
+
     @GetMapping("/{oid}")
     public List<Orders> findById(@PathVariable("oid") String oid) {
         return ordersService.findById(oid);

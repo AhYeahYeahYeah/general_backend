@@ -9,6 +9,8 @@ import java.util.List;
 public interface OrdersService {
     List<Orders> findAll();
 
+    List<Orders> findRecent();
+
     List<Orders> findById(String oid);
 
     List<Orders> findByCid(String cid);

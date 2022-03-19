@@ -11,6 +11,8 @@ import java.util.List;
 public interface OrdersMapper {
     List<Orders> findAll();
 
+    List<Orders> findRecent();
+
     List<Orders> findById(String oid);
 
     List<Orders> findByCid(String cid);

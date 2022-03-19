@@ -51,4 +51,9 @@
         where cid = #{cid}
         order by order_date desc
     </select>
+    <select id="findRecent" resultMap="OrdersResultMap">
+        select *
+        from orders
+        where order_date &gt;= UNIX_TIMESTAMP(NOW()) - 7 * 86400000
+    </select>
 </mapper>

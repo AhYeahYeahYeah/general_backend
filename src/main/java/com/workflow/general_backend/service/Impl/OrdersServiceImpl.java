@@ -35,6 +35,11 @@ public class OrdersServiceImpl implements OrdersService {
     }
 
     @Override
+    public List<Orders> findRecent() {
+        return ordersMapper.findRecent();
+    }
+
+    @Override
     public List<Orders> findById(String oid) {
         return ordersMapper.findById(oid);
     }
