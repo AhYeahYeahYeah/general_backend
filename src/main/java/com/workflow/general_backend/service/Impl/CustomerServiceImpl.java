@@ -71,18 +71,22 @@ public class CustomerServiceImpl implements CustomerService {
         // 生成uuid，进行注册
         String uuid = UUID.randomUUID().toString();
         customer.setCid(uuid);
-        int res = customerMapper.insert(customer);
-        CustomerProfile customerProfile = new CustomerProfile();
-        customerProfile.setCid(customer.getCid());
-        int re = customerProfileMapper.insert(customerProfile);
-        // 判断后台操作成功条数，为1即正常，为0则失败。
-        if (res == 0 || re == 0) {
-            commonResult.setStatus("Failed");
-            commonResult.setMsg("backend insert failed");
+        try {
+            int res = customerMapper.insert(customer);
+            CustomerProfile customerProfile = new CustomerProfile();
+            customerProfile.setCid(customer.getCid());
+            int re = customerProfileMapper.insert(customerProfile);
+            if (res == 1 && re == 1) {
+                commonResult.setStatus("OK");
+                commonResult.setMsg("");
+            } else {
+                commonResult.setStatus("Failed");
+                commonResult.setMsg("backend insert failed");
+            }
             return commonResult;
-        } else {
-            commonResult.setStatus("OK");
-            commonResult.setMsg("");
+        } catch (DataAccessException e) {
+            commonResult.setStatus("Failed");
+            commonResult.setMsg("backend insert failed"+e.toString());
             return commonResult;
         }
 
@@ -101,14 +105,27 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public CommonResult insert(Customer customer) {
         CommonResult commonResult = new CommonResult();
+        Customer customer_back;
+        customer_back = customerMapper.findCustomerByAccount(customer.getAccount());
+        // 判断是否已被注册
+        if (customer_back != null) {
+            commonResult.setStatus("Failed");
+            commonResult.setMsg("user already exists");
+            return commonResult;
+        }
         String uuid = UUID.randomUUID().toString();
         customer.setCid(uuid);
         try {
             int res = customerMapper.insert(customer);
-            if (res == 1) {
+            CustomerProfile customerProfile = new CustomerProfile();
+            customerProfile.setCid(customer.getCid());
+            int re = customerProfileMapper.insert(customerProfile);
+            if (res == 1 && re == 1) {
                 commonResult.setStatus("OK");
+                commonResult.setMsg("");
             } else {
                 commonResult.setStatus("Failed");
+                commonResult.setMsg("backend insert failed");
             }
             return commonResult;
         } catch (DataAccessException e) {
