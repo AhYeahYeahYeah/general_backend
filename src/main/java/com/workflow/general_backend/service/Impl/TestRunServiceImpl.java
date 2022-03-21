@@ -118,7 +118,6 @@ public class TestRunServiceImpl implements TestRunService {
             customerProfile.setAddress(regionlist[0]);
         }
         customerProfileService.update(customerProfile);
-        Product pastProduct=productMapper.findById(pid).get(0);
 
         String oid=UUID.randomUUID().toString();
         Orders orders=new Orders();
@@ -161,7 +160,6 @@ public class TestRunServiceImpl implements TestRunService {
         if(pastUserGroup.getGid()!=null){
             userGroupService.update(pastUserGroup);
         }
-        productMapper.update(pastProduct);
         productMapper.deleteById(pid);
         ordersMapper.deleteById(oid);
         customerService.deleteById(customer.getCid());
