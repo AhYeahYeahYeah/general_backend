@@ -34,6 +34,9 @@
         </set>
         where oid = #{oid}
     </update>
+    <delete id="deleteById" parameterType="string">
+        delete from orders where oid = #{oid}
+    </delete>
 
 
     <select id="findAll" resultMap="OrdersResultMap">

@@ -6,6 +6,8 @@ import com.workflow.general_backend.entity.CustomerProfile;
 import com.workflow.general_backend.mapper.CardMapper;
 import com.workflow.general_backend.mapper.CustomerProfileMapper;
 import com.workflow.general_backend.service.CustomerProfileService;
+import com.workflow.general_backend.utils.CheckMobilePhoneNum;
+import com.workflow.general_backend.utils.IDCardValidate;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
@@ -64,6 +66,16 @@ public class CustomerProfileServiceImpl implements CustomerProfileService {
     @Override
     public CommonResult update(CustomerProfile customerProfile) {
         CommonResult commonResult = new CommonResult();
+        if(!IDCardValidate.chekIdCard(customerProfile.getSid()).equals("SUCCESS")){
+           commonResult.setStatus("Failed");
+           commonResult.setMsg("customer ID error");
+           return commonResult;
+        }
+        if(!CheckMobilePhoneNum.CheckPhoneNum(customerProfile.getPhoneNum())){
+            commonResult.setStatus("Failed");
+            commonResult.setMsg("customer PhoneNum error");
+            return commonResult;
+        }
         if (customerProfile.getCardNum() != null && !Objects.equals(customerProfile.getCardNum(), "")) {
             Card card = new Card();
             card.setCardNum(customerProfile.getCardNum());

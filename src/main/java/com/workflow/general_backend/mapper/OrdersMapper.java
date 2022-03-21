@@ -20,4 +20,6 @@ public interface OrdersMapper {
     int insert(Orders orders) throws DataAccessException;
 
     int update(Orders orders) throws DataAccessException;
+
+    int deleteById(String oid);
 }
