@@ -169,7 +169,7 @@ public class TestRunServiceImpl implements TestRunService {
             commonResult.setStatus("Failed");
             commonResult.setMsg("workflow error");
             String version=jsonObject.getString("version");
-            String durl="http://8.141.159.53:5000/api/metadata/workflow/"+name+version;
+            String durl="http://8.141.159.53:5000/api/metadata/workflow/"+name+"/"+version;
             template.delete(durl);
             Workflow workflow=workflowMapper.findByName(name);
             if(version.equals("1")){
