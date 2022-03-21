@@ -32,4 +32,9 @@
         from workflow
         where fid = #{fid}
     </select>
+    <select id="findByName" parameterType="string" resultType="com.workflow.general_backend.entity.Workflow">
+        select *
+        from workflow
+        where name = #{name}
+    </select>
 </mapper>

@@ -13,6 +13,8 @@ public interface WorkflowMapper {
 
     List<Workflow> findById(String fid);
 
+    Workflow findByName(String name);
+
     int insert(Workflow workflow) throws DataAccessException;
 
     int deleteById(String fid);

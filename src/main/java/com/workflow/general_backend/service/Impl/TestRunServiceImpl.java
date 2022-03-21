@@ -1,6 +1,7 @@
 package com.workflow.general_backend.service.Impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.workflow.general_backend.dto.CommonResult;
 import com.workflow.general_backend.dto.OrdersDto;
@@ -41,6 +42,8 @@ public class TestRunServiceImpl implements TestRunService {
     OrdersMapper ordersMapper;
     @Resource
     ProductMapper productMapper;
+    @Resource
+    WorkflowMapper workflowMapper;
     @Override
     public CommonResult testRun(String jsonStr) throws URISyntaxException {
         CommonResult commonResult=new CommonResult();
@@ -110,8 +113,9 @@ public class TestRunServiceImpl implements TestRunService {
             userGroupService.update(userGroup);
         }
         if(jsonObject.get("region")!=null&&jsonObject.get("region")!=""){
-            region=(String) jsonObject.get("region");
-            customerProfile.setAddress(region);
+            region = jsonObject.getString("region");
+            String[] regionlist=region.replace("[","").replace("]","").replace("\"","").split(",");
+            customerProfile.setAddress(regionlist[0]);
         }
         customerProfileService.update(customerProfile);
         Product pastProduct=productMapper.findById(pid).get(0);
@@ -167,6 +171,13 @@ public class TestRunServiceImpl implements TestRunService {
             String version=jsonObject.getString("version");
             String durl="http://8.141.159.53:5000/api/metadata/workflow/"+name+version;
             template.delete(durl);
+            Workflow workflow=workflowMapper.findByName(name);
+            if(version.equals("1")){
+                workflowMapper.deleteById(workflow.getFid());
+            }else{
+                workflow.setVersion(Integer.toString(Integer.parseInt(version)-1));
+                workflowMapper.update(workflow);
+            }
         }else {
             commonResult.setStatus("OK");
             commonResult.setMsg("");
