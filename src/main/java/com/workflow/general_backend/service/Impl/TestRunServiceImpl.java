@@ -80,7 +80,7 @@ public class TestRunServiceImpl implements TestRunService {
         Customer customer=customerMapper.findCustomerByAccount("模拟用户");
         CustomerProfile customerProfile=customerProfileService.findById(customer.getCid()).get(0);
         customerProfile.setCardNum("模拟账户");
-        customerProfile.setSid("110101199003077213");
+        customerProfile.setSid("350602200105152011");
         customerProfile.setPhoneNum("13969455555");
 
         if(jsonObject.get("wid")!=null&&jsonObject.get("wid")!=""){
