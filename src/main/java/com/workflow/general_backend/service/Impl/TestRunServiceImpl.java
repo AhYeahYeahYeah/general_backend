@@ -81,9 +81,10 @@ public class TestRunServiceImpl implements TestRunService {
         customerProfile.setCardNum("模拟账户");
         customerProfile.setSid("350602200105152011");
         customerProfile.setPhoneNum("13969455555");
+        JSONObject inputTemplate=jsonObject.getJSONObject("inputTemplate");
 
-        if(jsonObject.get("wid")!=null&&jsonObject.get("wid")!=""){
-            wid=(String) jsonObject.get("wid");
+        if(inputTemplate.get("wid")!=null&&inputTemplate.get("wid")!=""){
+            wid=(String) inputTemplate.get("wid");
             pastWhitelist=whiteListService.findById(wid).get(0);
             Whitelist whitelist=new Whitelist();
             whitelist.setWid(pastWhitelist.getWid());
@@ -92,8 +93,8 @@ public class TestRunServiceImpl implements TestRunService {
             whitelist.setDescription(pastWhitelist.getDescription());
             whiteListService.update(whitelist);
         }
-        if(jsonObject.get("bid")!=null&&jsonObject.get("bid")!=""){
-            bid=(String) jsonObject.get("bid");
+        if(inputTemplate.get("bid")!=null&&inputTemplate.get("bid")!=""){
+            bid=(String) inputTemplate.get("bid");
             pastBlacklist=blacklistService.findById(bid).get(0);
             Blacklist blacklist=new Blacklist();
             blacklist.setBid(pastBlacklist.getBid());
@@ -102,8 +103,8 @@ public class TestRunServiceImpl implements TestRunService {
             blacklist.setDescription(pastBlacklist.getDescription());
             blacklistService.update(blacklist);
         }
-        if(jsonObject.get("gid")!=null&&jsonObject.get("gid")!=""){
-            gid=(String) jsonObject.get("gid");
+        if(inputTemplate.get("gid")!=null&&inputTemplate.get("gid")!=""){
+            gid=(String) inputTemplate.get("gid");
             pastUserGroup=userGroupService.findById(gid).get(0);
             UserGroup userGroup=new UserGroup();
             userGroup.setGid(pastUserGroup.getGid());
@@ -112,8 +113,8 @@ public class TestRunServiceImpl implements TestRunService {
             userGroup.setDescription(pastUserGroup.getDescription());
             userGroupService.update(userGroup);
         }
-        if(jsonObject.get("region")!=null&&jsonObject.get("region")!=""){
-            region = jsonObject.getString("region");
+        if(inputTemplate.get("region")!=null&&inputTemplate.get("region")!="[]"){
+            region = inputTemplate.getString("region");
             String[] regionlist=region.replace("[","").replace("]","").replace("\"","").split(",");
             customerProfile.setAddress(regionlist[0]);
         }
@@ -169,13 +170,7 @@ public class TestRunServiceImpl implements TestRunService {
             String version=jsonObject.getString("version");
             String durl="http://8.141.159.53:5000/api/metadata/workflow/"+name+"/"+version;
             template.delete(durl);
-            Workflow workflow=workflowMapper.findByName(name);
-            if(version.equals("1")){
-                workflowMapper.deleteById(workflow.getFid());
-            }else{
-                workflow.setVersion(Integer.toString(Integer.parseInt(version)-1));
-                workflowMapper.update(workflow);
-            }
+
         }else {
             commonResult.setStatus("OK");
             commonResult.setMsg("");

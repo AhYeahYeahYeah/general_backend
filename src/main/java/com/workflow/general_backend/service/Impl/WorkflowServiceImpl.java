@@ -5,6 +5,7 @@ import com.workflow.general_backend.dto.CommonResult;
 import com.workflow.general_backend.dto.WorkflowDto;
 import com.workflow.general_backend.entity.Workflow;
 import com.workflow.general_backend.mapper.WorkflowMapper;
+import com.workflow.general_backend.service.TestRunService;
 import com.workflow.general_backend.service.WorkflowService;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,8 @@ import java.util.UUID;
 public class WorkflowServiceImpl implements WorkflowService {
     @Resource
     WorkflowMapper workflowMapper;
+    @Resource
+    TestRunService testRunService;
 
     @Override
     public List<Workflow> findAll() {
@@ -47,8 +50,7 @@ public class WorkflowServiceImpl implements WorkflowService {
             // 封装参数，千万不要替换为Map与HashMap，否则参数无法传递
 //            JSONObject json = JSONObject.parseObject(workflowDto.getMetadataWorkflow());
             JSONObject json =workflowDto.getMetadataWorkflow();
-
-
+//            TestRunServiceImpl testRunServiceImpl = new TestRunServiceImpl();
             String url = "http://8.141.159.53:5000/api/metadata/workflow/";
             // 1、使用postForObject请求接口
             ResponseEntity<String> result = template.postForEntity(url, json, String.class);
@@ -61,6 +63,13 @@ public class WorkflowServiceImpl implements WorkflowService {
                 commonResult.setStatus("Failed");
                 commonResult.setMsg("conductor cannot save metaworkflow");
                 return commonResult;
+            }
+            CommonResult commonResult1=testRunService.testRun(String.valueOf(json));
+            if(commonResult1.getStatus().equals("Failed")){
+
+                commonResult.setStatus("Failed");
+                commonResult.setMsg("test run Failed");
+                return commonResult1;
             }
 
         } catch (Exception e) {
@@ -120,6 +129,14 @@ public class WorkflowServiceImpl implements WorkflowService {
                 commonResult.setStatus("Failed");
                 commonResult.setMsg("conductor cannot save metaworkflow");
                 return commonResult;
+            }
+//            TestRunServiceImpl testRunServiceImpl = new TestRunServiceImpl();
+            CommonResult commonResult1=testRunService.testRun(String.valueOf(json));
+            if(commonResult1.getStatus().equals("Failed")){
+
+                commonResult.setStatus("Failed");
+                commonResult.setMsg("test run Failed");
+                return commonResult1;
             }
 
         } catch (Exception e) {
