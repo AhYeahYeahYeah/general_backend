@@ -41,17 +41,13 @@ public class TestRunServiceImpl implements TestRunService {
     OrdersMapper ordersMapper;
     @Resource
     ProductMapper productMapper;
-    @Resource
-    WorkflowMapper workflowMapper;
     @Override
     public CommonResult testRun(String jsonStr) throws URISyntaxException {
         CommonResult commonResult=new CommonResult();
         JSONObject jsonObject = JSON.parseObject(jsonStr);
         String pid=UUID.randomUUID().toString();
-        String fid=(String) jsonObject.get("fid");
         Product product=new Product();
         product.setPid(pid);
-        product.setFid(fid);
         product.setProductNum("testrun");
         product.setProductName("testrun");
         product.setStorage(10000);
@@ -125,7 +121,6 @@ public class TestRunServiceImpl implements TestRunService {
         orders.setOid(oid);
         orders.setPid(pid);
         orders.setCid(customer.getCid());
-        orders.setWorkflowId(fid);
         orders.setPayment(0);
         orders.setOrderDate(String.valueOf(new Date().getTime()));
         orders.setExpireDate(String.valueOf(new Date().getTime()));
@@ -139,9 +134,7 @@ public class TestRunServiceImpl implements TestRunService {
         json.put("oid", orders.getOid());
         json.put("phoneNum", customerProfile.getPhoneNum());
         json.put("password", customer.getPassword());
-        System.out.println(fid);
-        List<Workflow> workflows = workflowMapper.findById(fid);
-        String name = workflows.get(0).getName();
+        String name = (String)jsonObject.get("name");
         String url = "http://8.141.159.53:5000/api/workflow/" + name;
         // 1、使用postForObject请求接口
         String resultId = template.postForObject(url, json, String.class);
