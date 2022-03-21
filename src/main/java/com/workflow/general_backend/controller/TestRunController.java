@@ -9,11 +9,11 @@ import java.net.URISyntaxException;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/v1/testrun")
+@RequestMapping("/v1/entity/testrun")
 public class TestRunController {
     @Resource
     TestRunService testRunService;
-    @GetMapping
+    @PostMapping
     public CommonResult testRun(@RequestBody String jsonStr) throws URISyntaxException {
 
         return testRunService.testRun(jsonStr);
