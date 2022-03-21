@@ -164,6 +164,9 @@ public class TestRunServiceImpl implements TestRunService {
         if(JSON.parseObject(result).get("status").toString().equals("FAILED")){
             commonResult.setStatus("Failed");
             commonResult.setMsg("workflow error");
+            String version=jsonObject.getString("version");
+            String durl="http://8.141.159.53:5000/api/metadata/workflow/"+name+version;
+            template.delete(durl);
         }else {
             commonResult.setStatus("OK");
             commonResult.setMsg("");
