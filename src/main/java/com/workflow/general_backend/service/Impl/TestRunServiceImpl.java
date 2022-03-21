@@ -47,8 +47,23 @@ public class TestRunServiceImpl implements TestRunService {
     public CommonResult testRun(String jsonStr) throws URISyntaxException {
         CommonResult commonResult=new CommonResult();
         JSONObject jsonObject = JSON.parseObject(jsonStr);
-        String pid=(String) jsonObject.get("pid");
+        String pid=UUID.randomUUID().toString();
         String fid=(String) jsonObject.get("fid");
+        Product product=new Product();
+        product.setPid(pid);
+        product.setFid(fid);
+        product.setProductNum("testrun");
+        product.setProductName("testrun");
+        product.setStorage(10000);
+        product.setValidityPeriod("180");
+        product.setAnnualRate((float) 0.1);
+        product.setMinAmount(100);
+        product.setIncreAmount(100);
+        product.setSinglePersonLimit(100);
+        product.setSingleDayLimit(100);
+        product.setRiskLevel(1);
+        product.setSettlementMethod("testrun");
+        productMapper.insert(product);
         String wid = "";
         Whitelist pastWhitelist=new Whitelist();
         String bid = "";
@@ -124,8 +139,6 @@ public class TestRunServiceImpl implements TestRunService {
         json.put("oid", orders.getOid());
         json.put("phoneNum", customerProfile.getPhoneNum());
         json.put("password", customer.getPassword());
-        List<Product> product = productMapper.findById(orders.getPid());
-        fid = product.get(0).getFid();
         System.out.println(fid);
         List<Workflow> workflows = workflowMapper.findById(fid);
         String name = workflows.get(0).getName();
@@ -152,6 +165,7 @@ public class TestRunServiceImpl implements TestRunService {
             userGroupService.update(pastUserGroup);
         }
         productMapper.update(pastProduct);
+        productMapper.deleteById(pid);
         ordersMapper.deleteById(oid);
         customerService.deleteById(customer.getCid());
         if(JSON.parseObject(result).get("status").toString().equals("FAILED")){
