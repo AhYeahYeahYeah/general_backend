@@ -95,29 +95,31 @@ public class RoomSocket {
         }
         JSONObject response = new JSONObject();
         response.put("path", "V1/Room/Quit");
-        response.put("accountList","");
-        List<String> list=new ArrayList<>();
-        int flag=0;
-        for (String i:roomsHashMap.keySet()
-             ) {
+        response.put("accountList", "");
+        List<String> list = new ArrayList<>();
+        int flag = 0;
+        for (String i : roomsHashMap.keySet()
+        ) {
             Room aRoom = roomsHashMap.get(i);
-            List<String> accountList=aRoom.getAccountList();
-            for(int j=0;j<accountList.size();j++){
-                if(accountList.get(j).equals(account)){
-                    accountList.remove(j);
-                    list=accountList;
-                    flag=1;
-                    break;
+            List<String> accountList = aRoom.getAccountList();
+            if (accountList != null) {
+                for (int j = 0; j < accountList.size(); j++) {
+                    if (accountList.get(j).equals(account)) {
+                        accountList.remove(j);
+                        list = accountList;
+                        flag = 1;
+                        break;
+                    }
                 }
             }
-            if(flag==1)
+            if (flag == 1)
                 break;
         }
-        response.put("accountList",list.toString().replace(" ",""));
-        for (String i:list
-             ) {
-            response.put("account",i);
-            sendInfo(response.toString(),i);
+        response.put("accountList", list.toString().replace(" ", ""));
+        for (String i : list
+        ) {
+            response.put("account", i);
+            sendInfo(response.toString(), i);
         }
 
         log.info("用户端退出:" + account + ",当前在线用户端数为:" + getOnlineCount());
@@ -193,7 +195,7 @@ public class RoomSocket {
                                 json.put("path", "V1/Room/Join");
                                 json.put("result", "Success");
                                 json.put("msg", "");
-                                json.put("accountList", first.toString().replace(" ",""));
+                                json.put("accountList", first.toString().replace(" ", ""));
                                 if (aRoom.getFlow() != null)
                                     json.put("msg", aRoom.getFlow());
 
@@ -213,7 +215,7 @@ public class RoomSocket {
                         }
                         List<String> list = roomsHashMap.get(id).getAccountList();
                         for (String i : list) {
-                            json.put("account",i);
+                            json.put("account", i);
                             sendInfo(json.toString(), i);
                         }
 //                        sendInfo(json.toString(), account);
@@ -224,7 +226,7 @@ public class RoomSocket {
                         response.put("path", "V1/Room/Query");
                         List<Room> rooms = QueryRooms();
                         JSONObject roomJsonObject = new JSONObject();
-                        roomJsonObject.put("account",account);
+                        roomJsonObject.put("account", account);
                         roomJsonObject.put("rooms", rooms);
                         response.put("data", roomJsonObject);
                         sendInfo(response.toString(), account);
@@ -246,16 +248,16 @@ public class RoomSocket {
                             log.info("account " + account + " quit success");
                             response.put("result", "Success");
                             response.put("msg", "");
-                            response.put("accountList",accountlist.toString().replace(" ",""));
+                            response.put("accountList", accountlist.toString().replace(" ", ""));
                         } else {
                             response.put("result", "Failed");
                             response.put("msg", "Quit Error");
-                            response.put("accountList","");
+                            response.put("accountList", "");
                         }
                         this.currentRoomId = "";
                         List<String> list = roomsHashMap.get(roomid).getAccountList();
                         for (String i : list) {
-                            response.put("account",i);
+                            response.put("account", i);
                             sendInfo(response.toString(), i);
                         }
 //                        sendInfo(response.toString(), account);
@@ -292,8 +294,8 @@ public class RoomSocket {
                         JSONObject room = data.getJSONObject("room");
                         String roomid = room.getString("id");
                         String password = room.getString("password");
-                        List<String> accountList=roomsHashMap.get(roomid).getAccountList();
-                        response.put("msg","");
+                        List<String> accountList = roomsHashMap.get(roomid).getAccountList();
+                        response.put("msg", "");
                         if (!roomsHashMap.containsKey(roomid)) {
                             response.put("result", "Failed");
                             response.put("msg", "Delete Error: id not found");
@@ -304,7 +306,7 @@ public class RoomSocket {
 
                                 log.info("account " + account + " delete success");
                                 response.put("result", "Success");
-                                if(accountList!=null)
+                                if (accountList != null)
                                     response.put("msg", accountList.toString());
                             } else {
                                 response.put("result", "Failed");
@@ -312,9 +314,9 @@ public class RoomSocket {
                             }
                         }
                         this.currentRoomId = "";
-                        for (String i:clientsHashMap.keySet()
-                             ) {
-                            response.put("account",i);
+                        for (String i : clientsHashMap.keySet()
+                        ) {
+                            response.put("account", i);
                             sendInfo(response.toString(), i);
                         }
 //                        this.currentRoomId = "";
