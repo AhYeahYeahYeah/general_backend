@@ -292,6 +292,7 @@ public class RoomSocket {
                         JSONObject room = data.getJSONObject("room");
                         String roomid = room.getString("id");
                         String password = room.getString("password");
+                        List<String> accountList=roomsHashMap.get(roomid).getAccountList();
 
                         if (!roomsHashMap.containsKey(roomid)) {
                             response.put("result", "Failed");
@@ -303,14 +304,19 @@ public class RoomSocket {
 
                                 log.info("account " + account + " delete success");
                                 response.put("result", "Success");
-                                response.put("msg", "roomid:"+ roomid +"delete");
+                                response.put("msg", accountList.toString());
                             } else {
                                 response.put("result", "Failed");
                                 response.put("msg", "Delete Error: password incorrect");
                             }
                         }
                         this.currentRoomId = "";
-                        sendInfo(response.toString(), account);
+                        for (String i:clientsHashMap.keySet()
+                             ) {
+                            sendInfo(response.toString(), i);
+                        }
+//                        this.currentRoomId = "";
+//                        sendInfo(response.toString(), account);
                         break;
                     }
                     default: {
