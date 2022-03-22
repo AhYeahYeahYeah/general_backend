@@ -224,6 +224,7 @@ public class RoomSocket {
                         response.put("path", "V1/Room/Query");
                         List<Room> rooms = QueryRooms();
                         JSONObject roomJsonObject = new JSONObject();
+                        roomJsonObject.put("account",account);
                         roomJsonObject.put("rooms", rooms);
                         response.put("data", roomJsonObject);
                         sendInfo(response.toString(), account);
@@ -302,7 +303,7 @@ public class RoomSocket {
 
                                 log.info("account " + account + " delete success");
                                 response.put("result", "Success");
-                                response.put("msg", "");
+                                response.put("msg", "roomid:"+ roomid +"delete");
                             } else {
                                 response.put("result", "Failed");
                                 response.put("msg", "Delete Error: password incorrect");
