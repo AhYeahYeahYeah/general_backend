@@ -66,16 +66,16 @@ public class CustomerProfileServiceImpl implements CustomerProfileService {
     @Override
     public CommonResult update(CustomerProfile customerProfile) {
         CommonResult commonResult = new CommonResult();
-        if(!IDCardValidate.chekIdCard(customerProfile.getSid()).equals("SUCCESS")){
-           commonResult.setStatus("Failed");
-           commonResult.setMsg("customer ID error");
-           return commonResult;
-        }
-        if(!CheckMobilePhoneNum.CheckPhoneNum(customerProfile.getPhoneNum())){
-            commonResult.setStatus("Failed");
-            commonResult.setMsg("customer PhoneNum error");
-            return commonResult;
-        }
+//        if(!IDCardValidate.chekIdCard(customerProfile.getSid()).equals("SUCCESS")){
+//           commonResult.setStatus("Failed");
+//           commonResult.setMsg("customer ID error");
+//           return commonResult;
+//        }
+//        if(!CheckMobilePhoneNum.CheckPhoneNum(customerProfile.getPhoneNum())){
+//            commonResult.setStatus("Failed");
+//            commonResult.setMsg("customer PhoneNum error");
+//            return commonResult;
+//        }
         if (customerProfile.getCardNum() != null && !Objects.equals(customerProfile.getCardNum(), "")) {
             Card card = new Card();
             card.setCardNum(customerProfile.getCardNum());
