@@ -293,7 +293,7 @@ public class RoomSocket {
                         String roomid = room.getString("id");
                         String password = room.getString("password");
                         List<String> accountList=roomsHashMap.get(roomid).getAccountList();
-
+                        response.put("msg","");
                         if (!roomsHashMap.containsKey(roomid)) {
                             response.put("result", "Failed");
                             response.put("msg", "Delete Error: id not found");
@@ -304,7 +304,8 @@ public class RoomSocket {
 
                                 log.info("account " + account + " delete success");
                                 response.put("result", "Success");
-                                response.put("msg", accountList.toString());
+                                if(accountList!=null)
+                                    response.put("msg", accountList.toString());
                             } else {
                                 response.put("result", "Failed");
                                 response.put("msg", "Delete Error: password incorrect");
