@@ -304,6 +304,7 @@ public class RoomSocket {
 
                                 log.info("account " + account + " delete success");
                                 response.put("result", "Success");
+                                response.put("account",account);
                                 if(accountList!=null)
                                     response.put("msg", accountList.toString());
                             } else {
