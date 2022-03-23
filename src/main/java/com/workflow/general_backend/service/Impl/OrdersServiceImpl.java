@@ -1,9 +1,9 @@
 package com.workflow.general_backend.service.Impl;
 
-import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.workflow.general_backend.dto.CommonResult;
 import com.workflow.general_backend.dto.OrdersDto;
+import com.workflow.general_backend.dto.OrdersVo;
 import com.workflow.general_backend.entity.*;
 import com.workflow.general_backend.mapper.*;
 import com.workflow.general_backend.service.OrdersService;
@@ -13,7 +13,6 @@ import org.springframework.amqp.core.MessageDeliveryMode;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -30,7 +29,7 @@ public class OrdersServiceImpl implements OrdersService {
     @Resource
     RMQPublishService publishService;
     @Override
-    public List<Orders> findAll() {
+    public List<OrdersVo> findAll() {
         return ordersMapper.findAll();
     }
 

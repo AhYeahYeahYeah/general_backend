@@ -2,12 +2,13 @@ package com.workflow.general_backend.service;
 
 import com.workflow.general_backend.dto.CommonResult;
 import com.workflow.general_backend.dto.OrdersDto;
+import com.workflow.general_backend.dto.OrdersVo;
 import com.workflow.general_backend.entity.Orders;
 
 import java.util.List;
 
 public interface OrdersService {
-    List<Orders> findAll();
+    List<OrdersVo> findAll();
 
     List<Orders> findRecent();
 

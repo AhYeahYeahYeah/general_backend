@@ -2,6 +2,7 @@ package com.workflow.general_backend.controller;
 
 import com.workflow.general_backend.dto.CommonResult;
 import com.workflow.general_backend.dto.OrdersDto;
+import com.workflow.general_backend.dto.OrdersVo;
 import com.workflow.general_backend.entity.Orders;
 import com.workflow.general_backend.entity.Product;
 import com.workflow.general_backend.service.OrdersService;
@@ -17,12 +18,12 @@ public class OrdersController {
     @Resource
     OrdersService ordersService;
     @GetMapping
-    public List<Orders> findAll() {
+    public List<OrdersVo> findAll() {
         return ordersService.findAll();
     }
 
     @GetMapping("/dashboard")
-    public List<Orders> findAllForDash(){return ordersService.findAll();}
+    public List<OrdersVo> findAllForDash(){return ordersService.findAll();}
 
     @GetMapping("/dashboard/recent")
     public List<Orders> findRecent(){return ordersService.findRecent();}
