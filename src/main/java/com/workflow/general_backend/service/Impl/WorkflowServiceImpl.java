@@ -44,6 +44,7 @@ public class WorkflowServiceImpl implements WorkflowService {
         workflow.setDescription(workflowDto.getDescription());
         workflow.setVersion(workflowDto.getVersion());
         workflow.setFlow(workflowDto.getFlow());
+        workflow.setAccount(workflowDto.getAccount());
         try {
             RestTemplate template = new RestTemplate();
 
@@ -152,6 +153,7 @@ public class WorkflowServiceImpl implements WorkflowService {
             workflow.setDescription(workflowDto.getDescription());
             workflow.setVersion(workflowDto.getVersion());
             workflow.setFlow(workflowDto.getFlow());
+            workflow.setAccount(workflowDto.getAccount());
             int res = workflowMapper.update(workflow);
             if (res == 1) {
                 commonResult.setStatus("OK");

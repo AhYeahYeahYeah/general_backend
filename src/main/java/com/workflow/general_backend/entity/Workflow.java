@@ -8,6 +8,7 @@ public class Workflow {
   private String description;
   private String version;
   private String flow;
+  private String account;
 
 
   public String getFid() {
@@ -54,4 +55,11 @@ public class Workflow {
     this.flow = flow;
   }
 
+  public String getAccount() {
+    return account;
+  }
+
+  public void setAccount(String account) {
+    this.account = account;
+  }
 }

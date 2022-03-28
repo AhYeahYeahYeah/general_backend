@@ -9,6 +9,7 @@ public class WorkflowDto extends Workflow {
     private String description;
     private String version;
     private String flow;
+    private String account;
     private JSONObject metadataWorkflow;
 
     public String getFid() {
@@ -52,6 +53,16 @@ public class WorkflowDto extends Workflow {
 
     public void setFlow(String flow) {
         this.flow = flow;
+    }
+
+
+    public String getAccount() {
+        return account;
+    }
+
+
+    public void setAccount(String account) {
+        this.account = account;
     }
 
     public JSONObject getMetadataWorkflow() {
