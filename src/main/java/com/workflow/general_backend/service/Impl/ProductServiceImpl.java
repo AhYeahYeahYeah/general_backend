@@ -80,6 +80,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product findByName(String type, String time) {
         String name=time+type;
+        System.out.println(name);
         return productMapper.findByName(name);
     }
 }
