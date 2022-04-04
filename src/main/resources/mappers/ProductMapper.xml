@@ -57,6 +57,11 @@
         from product
         where pid = #{pid}
     </select>
+    <select id="findByName" parameterType="string" resultMap="ProductResultMap">
+        SELECT *
+        from product
+        where product_name = #{productName}
+    </select>
 
 
 </mapper>

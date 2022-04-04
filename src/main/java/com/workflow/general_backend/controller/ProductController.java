@@ -29,6 +29,9 @@ public class ProductController {
         return productService.findById(pid);
     }
 
+    @GetMapping("/forBaidu")
+    public Product findByName(String type,String time){return productService.findByName(type,time);}
+
     @PostMapping
     public CommonResult insert(@RequestBody Product product) {
         return productService.insert(product);

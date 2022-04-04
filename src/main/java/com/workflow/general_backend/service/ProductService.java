@@ -16,4 +16,6 @@ public interface ProductService {
     CommonResult deleteById(String pid);
 
     CommonResult update(Product product);
+
+    Product findByName(String type, String time);
 }

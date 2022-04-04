@@ -1,6 +1,5 @@
 package com.workflow.general_backend.mapper;
 
-import com.workflow.general_backend.dto.CommonResult;
 import com.workflow.general_backend.entity.Product;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.dao.DataAccessException;
@@ -19,4 +18,6 @@ public interface ProductMapper {
     int deleteById(String pid);
 
     int update(Product product) throws DataAccessException;
+
+    Product findByName(String name);
 }

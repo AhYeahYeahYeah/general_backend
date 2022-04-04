@@ -76,4 +76,10 @@ public class ProductServiceImpl implements ProductService {
         }
 
     }
+
+    @Override
+    public Product findByName(String type, String time) {
+        String name=time+type;
+        return productMapper.findByName(name);
+    }
 }
