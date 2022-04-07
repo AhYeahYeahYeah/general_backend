@@ -13,6 +13,6 @@ public class GuidanceServiceImpl implements GuidanceService {
     GuidanceMapper guidanceMapper;
     @Override
     public Guidance findById(String id) {
-        return guidanceMapper.findById(id);
+        return guidanceMapper.findById(id.substring(7));
     }
 }
