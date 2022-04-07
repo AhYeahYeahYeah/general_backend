@@ -1,20 +1,17 @@
 package com.workflow.general_backend.service.Impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.client.Channel;
 import com.workflow.general_backend.dto.OrdersDto;
-import com.workflow.general_backend.entity.Orders;
-import com.workflow.general_backend.entity.Product;
-import com.workflow.general_backend.entity.RmqBody;
-import com.workflow.general_backend.entity.Workflow;
-import com.workflow.general_backend.mapper.OrdersMapper;
-import com.workflow.general_backend.mapper.ProductMapper;
-import com.workflow.general_backend.mapper.WorkflowMapper;
+import com.workflow.general_backend.entity.*;
+import com.workflow.general_backend.mapper.*;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.dao.DataAccessException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -36,6 +33,10 @@ public class RMQReceiveService {
     ProductMapper productMapper;
     @Resource
     WorkflowMapper workflowMapper;
+    @Resource
+    CustomerProfileMapper customerProfileMapper;
+    @Resource
+    CardMapper cardMapper;
 
     // 监听订单队列
     @RabbitListener(queues = ORDER_QUEUE)
@@ -69,6 +70,29 @@ public class RMQReceiveService {
         String result = template.postForObject(url, json, String.class);
         System.out.println("resultWorkflowID:-----" + result);
         //通过websocket将workflowid发送到前端
+        String resultStatus="";
+        while (true){
+            ResponseEntity<String> res = template.getForEntity("http://8.141.159.53:5000/api/workflow/"+result, String.class);
+            String body = res.getBody();
+            JSONObject object = JSON.parseObject(body);
+            String status = (String) object.get("status");
+            if(!status.equals("RUNNING")){
+                System.out.println(body);
+                resultStatus=status;
+                break;
+            }
+            Thread.sleep(100);
+        }
+        if(resultStatus.equals("COMPLETED")){
+            //扣款
+            float payment=orders.getPayment();
+            List<CustomerProfile> cp = customerProfileMapper.findById(orders.getCid());
+            Card card=cardMapper.findById(cp.get(0).getCardNum());
+            float last=card.getMoney()-payment;
+            card.setMoney(last);
+            cardMapper.update(card);
+            System.out.println("set money success");
+        }
         boolean status = false;
         int flag = 0;
         while (true) {

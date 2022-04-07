@@ -65,9 +65,6 @@ public class OrdersServiceImpl implements OrdersService {
             commonResult.setMsg("money not enough");
             return commonResult;
         }
-        card.setMoney(last);
-        cardMapper.update(card);
-        System.out.println("set money success");
         Orders orders = new Orders();
         orders.setOid(uuid);
         orders.setCid(ordersDto.getCid());
