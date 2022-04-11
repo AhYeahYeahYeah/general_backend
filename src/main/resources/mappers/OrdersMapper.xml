@@ -51,13 +51,29 @@
         where oid = #{oid}
     </update>
     <delete id="deleteById" parameterType="string">
-        delete from orders where oid = #{oid}
+        delete
+        from orders
+        where oid = #{oid}
     </delete>
 
 
     <select id="findAll" resultMap="OrdersVoResultMap">
-        select orders.oid, orders.pid, orders.cid, payment, order_date, expire_date, workflow_id, status, account, product_name
-        from orders,product,customer where orders.pid=product.pid and orders.cid=customer.cid
+        select orders.oid,
+               orders.pid,
+               orders.cid,
+               payment,
+               order_date,
+               expire_date,
+               workflow_id,
+               status,
+               account,
+               product_name
+        from orders,
+             product,
+             customer
+        where orders.pid = product.pid
+          and orders.cid = customer.cid
+        order by order_date desc
     </select>
     <select id="findById" parameterType="String" resultMap="OrdersResultMap">
         select *
