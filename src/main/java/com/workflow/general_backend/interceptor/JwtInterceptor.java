@@ -42,7 +42,7 @@ public class JwtInterceptor implements HandlerInterceptor {
             return true;
         if (method.equals("OPTIONS")) {
             response.setStatus(HttpServletResponse.SC_OK);
-            return false;
+            return true;
         }
         if (JWT.equals("pass")) {
             return true;
