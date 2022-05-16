@@ -38,18 +38,20 @@ public class JwtInterceptor implements HandlerInterceptor {
         String JWT = request.getHeader("Authorization");
         String url = request.getRequestURI();
         String method = request.getMethod();
-        if(url.startsWith("/v1/entity/product/forBaidu"))
+        if (url.startsWith("/v1/entity/product/forBaidu"))
             return true;
-        if(method.equals("OPTIONS"))
-            return true;
-        if(JWT.equals("pass")){
+        if (method.equals("OPTIONS")) {
+            response.setStatus(HttpServletResponse.SC_OK);
+            return false;
+        }
+        if (JWT.equals("pass")) {
             return true;
         }
         String required = "";
         System.out.println(method);
 
         System.out.println(url);
-        if (url.equals("/v1/entity/workflow")||url.equals("/v1/entity/serviceinfo")) {
+        if (url.equals("/v1/entity/workflow") || url.equals("/v1/entity/serviceinfo")) {
             required = "1";
             System.out.println("服务编排");
         } else if (url.equals("/v1/entity/customer")) {
@@ -95,14 +97,14 @@ public class JwtInterceptor implements HandlerInterceptor {
                 System.out.println("1-true");
             }
             //开放仪表盘权限
-            if(url.equals("/v1/entity/customer/dashboard")||url.equals("/v1/entity/product/dashboard")
-                    ||url.equals("/v1/entity/orders/dashboard")){
+            if (url.equals("/v1/entity/customer/dashboard") || url.equals("/v1/entity/product/dashboard")
+                    || url.equals("/v1/entity/orders/dashboard")) {
                 return true;
             }
             if (required.equals(""))
                 return true;
             Customer customer = customerMapper.findCustomerByAccount(account);
-            if(customer!=null){
+            if (customer != null) {
                 return true;
             }
             Admin admin = adminMapper.findAdminByAccount(account);
