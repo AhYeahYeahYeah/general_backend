@@ -58,7 +58,7 @@ public class RMQPublishService implements RabbitTemplate.ConfirmCallback,RabbitT
             System.out.println("消息丢失, 没有投递成功");
             System.out.println("-----------------------");
             try {
-                Thread.sleep(2000L);
+                Thread.sleep(500L);
                 //msg定义为类，类中有限制次数，小于5次进行重传，每次confirm时进行确认
                 if(rmqBody.getNumber()<5){
                     rmqBody.setNumber(rmqBody.getNumber()+1);
